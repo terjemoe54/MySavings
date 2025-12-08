@@ -43,6 +43,7 @@ class Invoice {
         self.isPaid = isPaid
     }
     
+    //
     //    @Transient
     //    var displayRegDate: String {
     //        let dateFormatter = DateFormatter()
