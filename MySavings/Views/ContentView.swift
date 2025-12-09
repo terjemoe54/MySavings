@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var invoiceToEdit: Invoice?
     @State private var showConfirmation: Bool = false
     @State private var invoiceToDelete: Invoice?
+   
     
     var body: some View {
         NavigationStack {
@@ -143,6 +144,8 @@ struct ContentView: View {
             }
         }
    }
+   
+    
     
     fileprivate func FloatingButton() -> some View {
         VStack {
