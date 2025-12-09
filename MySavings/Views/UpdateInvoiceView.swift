@@ -22,6 +22,8 @@ struct UpdateInvoiceView: View {
         List {
             Section("Faktura For") {
                 TextField("Navn", text: $title)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.sentences)
             }
             HStack{
                 Text("Beløp:")
@@ -75,16 +77,6 @@ struct UpdateInvoiceView: View {
         .navigationTitle("Oppdater Faktura")
         
     }
-}
-
-#Preview {
-    UpdateInvoiceView(invoice: Invoice())
-        .modelContainer(for: Invoice.self)
-}
-
-extension UpdateInvoiceView {
-    
-    
     func updateInvoice() {
         // setter verdiene fra variablene til databasen
         invoice.title = title
@@ -93,4 +85,9 @@ extension UpdateInvoiceView {
         invoice.isPaid = isPaid
         
     }
+}
+
+#Preview {
+    UpdateInvoiceView(invoice: Invoice())
+        .modelContainer(for: Invoice.self)
 }

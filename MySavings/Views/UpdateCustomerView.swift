@@ -19,6 +19,8 @@ struct UpdateCustomerView: View {
         List {
             Section("Kunde") {
                 TextField("Navn", text: $title)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.sentences)
             }
             
             Section {

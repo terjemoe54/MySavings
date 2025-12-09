@@ -26,6 +26,8 @@ struct CreateInvoiceView: View {
             List {
                 Section("Faktura For:"){
                     TextField("Navn", text: $title)
+                        .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.sentences)
                 }
                 
                 Section("Detaljer"){

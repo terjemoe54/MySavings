@@ -14,11 +14,17 @@ struct CreateCustomerView: View {
     @Query(sort: \Customer.title, order: .forward) private var customers: [Customer]
     @State private var title: String = ""
     @State private var customerToEdit: Customer?
+    @State private var customerToDelete: Customer?
+    @State private var showConfirmation: Bool = false
+    
     var body: some View {
         NavigationView {
             List {
                 Section("Kunde: ") {
                     TextField("Kunde Navn", text: $title)
+                        .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.sentences)
+                    
                     Button("Opprett Kunde") {
                         withAnimation{
                             let customer = Customer(title: title)
@@ -36,26 +42,39 @@ struct CreateCustomerView: View {
                         Text(customer.title)
                             .swipeActions {
                                 Button(role: .destructive){
-                                    withAnimation {
-                                        modelContext.delete(customer)
-                                    }
+                                    customerToDelete = customer
+                                    showConfirmation.toggle()
                                 } label: {
                                     Label("Slett" , systemImage: "trash.fill")
                                 }
-                                
                                 Button {
                                     customerToEdit = customer
                                 } label: {
                                     Label("Endre", systemImage: "pencil")
                                 }
                                 .tint(.orange)
-                                
                             }
                             .onTapGesture {
                                 customerToEdit = customer
                             }
                     }
-                    
+                    .confirmationDialog(
+                        "Slett",
+                        isPresented: $showConfirmation,
+                        titleVisibility: .visible,
+                        presenting: customerToDelete ,
+                        actions: { item in
+                            Button(role: .destructive) {
+                                withAnimation {
+                                    modelContext.delete(item)
+                                }
+                            } label: {
+                                Text("Slett")
+                            }
+                        },
+                        message: { item in
+                            Text("Er du sikker på at du vil slette \(item.title)?")
+                        })
                 }
             }
             .navigationTitle("Opprett Kunde")
