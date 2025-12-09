@@ -11,9 +11,7 @@ import SwiftData
 struct CreateCustomerView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    
-    @Query private var customers: [Customer]
-    
+    @Query(sort: \Customer.title, order: .forward) private var customers: [Customer]
     @State private var title: String = ""
     @State private var customerToEdit: Customer?
     var body: some View {
@@ -34,7 +32,7 @@ struct CreateCustomerView: View {
                 }
                 
                 Section("Kunder") {
-                    ForEach(customers.sorted { $0.title < $1.title }) { customer in
+                    ForEach(customers) { customer in
                         Text(customer.title)
                             .swipeActions {
                                 Button(role: .destructive){
@@ -53,7 +51,11 @@ struct CreateCustomerView: View {
                                 .tint(.orange)
                                 
                             }
+                            .onTapGesture {
+                                customerToEdit = customer
+                            }
                     }
+                    
                 }
             }
             .navigationTitle("Opprett Kunde")

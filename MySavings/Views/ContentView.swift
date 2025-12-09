@@ -11,12 +11,10 @@ import SwiftData
 struct ContentView: View {
     
     @Environment(\.modelContext) private var modelContext
-    @Query private var invoices: [Invoice]
-    
+    @Query(sort: \Invoice.dueDate, order: .forward) private var invoices: [Invoice]
     @State private var showCreateCustomer = false
     @State private var showCreateInvoice = false
     @State private var invoiceToEdit: Invoice?
-    
     @State private var showConfirmation: Bool = false
     @State private var invoiceToDelete: Invoice?
     
@@ -60,7 +58,7 @@ struct ContentView: View {
                             }
                         }
                      Spacer()
-                        
+                    
                         Button {
                             withAnimation {
                                 invoice.isPaid.toggle()

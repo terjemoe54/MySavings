@@ -11,7 +11,7 @@ import SwiftData
 struct UpdateInvoiceView: View {
     @Environment(\.dismiss) var dismiss
     @State var selectedCustomer: Customer?
-    @Query private var customers: [Customer]
+    @Query(sort: \Customer.title, order: .forward) private var customers: [Customer]
     @Bindable var invoice: Invoice
     @State private var amount = 0.0
     @State private var title = ""
@@ -49,9 +49,19 @@ struct UpdateInvoiceView: View {
             }
             
             Section {
-                Button("Oppdater") {
-                    updateInvoice()
-                    dismiss()
+                HStack {
+                    Button("Oppdater") {
+                        updateInvoice()
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Spacer()
+                    
+                    Button("Avbryt") {
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
             }
         }
@@ -63,6 +73,7 @@ struct UpdateInvoiceView: View {
             self.isPaid = invoice.isPaid
         }
         .navigationTitle("Oppdater Faktura")
+        
     }
 }
 
