@@ -17,7 +17,7 @@ struct UpdateCustomerView: View {
     
     var body: some View {
         List {
-            Section("Kunde") {
+            Section("Kunder") {
                 TextField("Navn", text: $title)
                     .autocorrectionDisabled(true)
                     .textInputAutocapitalization(.sentences)
@@ -34,7 +34,7 @@ struct UpdateCustomerView: View {
             // Laster inn verdier til variablene fra databasen når vi åpner listen
             self.title = customer.title
         }
-        .navigationTitle("Oppdater Kunde")
+        .navigationTitle("Oppdater Kunder")
     }
 }
 

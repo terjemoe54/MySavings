@@ -20,69 +20,74 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(invoices) { invoice in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            
-                            Text(invoice.title)
-                                .font(.system(size: 15,weight: .bold))
-                            
-                            Text("\(invoice.dueDate, style: .date)")
-                                .font(.callout)
-                            HStack{
-                                if let customer = invoice.customer {
-                                    Text(customer.title)
-                                        .foregroundStyle(Color.blue)
-                                        .bold()
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 8)
-                                        .background(Color.blue.opacity(0.1),
-                                                    in: RoundedRectangle(cornerRadius: 8,
-                                                                         style: .continuous))
-                                }
+            ZStack {
+                List {
+                    ForEach(invoices) { invoice in
+                        HStack {
+                            VStack(alignment: .leading) {
                                 
-                                if invoice.isPaid {
-                                    HStack{
-                                        Text("PAID")
-                                            .font(.system(size: 16,weight: .bold))
-                                            .foregroundStyle(.green)
-                                        
-                                        Image(systemName: "heart.fill")
-                                            .symbolVariant(.fill)
-                                            .foregroundColor(.red)
-                                            .font(.system(size: 16,weight: .bold))
+                                Text(invoice.title)
+                                    .font(.system(size: 15,weight: .bold))
+                                
+                                Text("\(invoice.dueDate, style: .date)")
+                                    .font(.callout)
+                                HStack{
+                                    if let customer = invoice.customer {
+                                        Text(customer.title)
+                                            .foregroundStyle(Color.blue)
                                             .bold()
+                                            .padding(.horizontal)
+                                            .padding(.vertical, 8)
+                                            .background(Color.blue.opacity(0.1),
+                                                        in: RoundedRectangle(cornerRadius: 8,
+                                                                             style: .continuous))
+                                    }
+                                    
+                                    if invoice.isPaid {
+                                        HStack{
+                                            Text("PAID")
+                                                .font(.system(size: 16,weight: .bold))
+                                                .foregroundStyle(.green)
+                                            
+                                            Image(systemName: "heart.fill")
+                                                .symbolVariant(.fill)
+                                                .foregroundColor(.red)
+                                                .font(.system(size: 16,weight: .bold))
+                                                .bold()
+                                        }
                                     }
                                 }
+                                
                             }
-                        }
-                     Spacer()
-                    
-                        Button {
-                            withAnimation {
-                                invoice.isPaid.toggle()
-                            }
-                        } label: {
+                            Spacer()
                             
-                            Image(systemName: "checkmark")
-                                .symbolVariant(.circle.fill)
-                                .foregroundStyle(invoice.isPaid ? .green : .gray)
-                                .font(.largeTitle)
+                            Button {
+                                withAnimation {
+                                    invoice.isPaid.toggle()
+                                }
+                            } label: {
+                                
+                                Image(systemName: "checkmark")
+                                    .symbolVariant(.circle.fill)
+                                    .foregroundStyle(invoice.isPaid ? .green : .gray)
+                                    .font(.largeTitle)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
-                    }
-                    .onTapGesture {
-                        invoiceToEdit = invoice
-                    }
-                    .swipeActions {
-                        
-                        Button(role: .destructive) {
-                            invoiceToDelete = invoice
-                            showConfirmation.toggle()
+                        .onTapGesture {
+                            invoiceToEdit = invoice
+                        }
+                        .swipeActions {
+                            
+                            Button(role: .destructive) {
+                                invoiceToDelete = invoice
+                                showConfirmation.toggle()
+                            }
                         }
                     }
+                    
                 }
+                FloatingButton()
             }
             .confirmationDialog(
                 "Slett",
@@ -127,7 +132,7 @@ struct ContentView: View {
             })
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Ny Kunde \(Image(systemName: "person.2.fill"))") {
+                    Button("Kunder \(Image(systemName: "person.2.fill"))") {
                         showCreateCustomer.toggle()
                     }
                     .buttonStyle(.borderedProminent)
@@ -135,18 +140,27 @@ struct ContentView: View {
                     .padding(8)
                 }
                 
-                ToolbarItem(placement: .topBarLeading)   {
-                    Button("Faktura \(Image(systemName: "plus"))") {
-                        showCreateInvoice.toggle()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .font(.system(size: 15, weight: .bold))
-                    .padding(8)
-                }
             }
         }
+   }
+    
+    fileprivate func FloatingButton() -> some View {
+        VStack {
+            Spacer()
+            NavigationLink {
+                CreateInvoiceView()
+            } label: {
+                Text("+")
+                    .font(.largeTitle)
+                    .frame(width: 70, height: 70)
+                    .foregroundStyle(Color.white)
+            }
+            .background(Color.green)
+            .clipShape(Circle())
+            .padding(.bottom, 7)
+        }
     }
-}
+ }
 
 #Preview {
     ContentView()
