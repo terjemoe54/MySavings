@@ -59,8 +59,7 @@ struct ContentView: View {
                                 }
                             }
                         }
-                        
-                        Spacer()
+                     Spacer()
                         
                         Button {
                             withAnimation {
@@ -75,19 +74,15 @@ struct ContentView: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    .onTapGesture {
+                        invoiceToEdit = invoice
+                    }
                     .swipeActions {
                         
                         Button(role: .destructive) {
                             invoiceToDelete = invoice
                             showConfirmation.toggle()
                         }
-                        
-                        Button {
-                            invoiceToEdit = invoice
-                        } label: {
-                            Label("Endre", systemImage: "pencil")
-                        }
-                        .tint(.orange)
                     }
                 }
             }
