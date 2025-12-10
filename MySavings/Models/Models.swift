@@ -5,7 +5,7 @@
 //  Created by Terje Moe on 03/12/2025.
 //
 // Endret Category to Customer
-// Endret Item to Invoice
+// Ser Bra Ut
 
 
 import Foundation
