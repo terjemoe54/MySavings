@@ -16,6 +16,7 @@ struct UpdateInvoiceView: View {
     @State private var amount = 0.0
     @State private var title = ""
     @State private var dueDate: Date = Date()
+    @State private var paidDate: Date = Date()
     @State private var isPaid: Bool = false
     
     var body: some View {
@@ -34,6 +35,10 @@ struct UpdateInvoiceView: View {
             Section {
                 DatePicker("Forfallsdato",
                            selection: $dueDate, displayedComponents: .date)
+                
+                DatePicker("Betalt dato",
+                           selection: $paidDate, displayedComponents: .date)
+                
                 Toggle("Betalt ?", isOn: $isPaid)
             }
             
@@ -72,6 +77,7 @@ struct UpdateInvoiceView: View {
             self.title = invoice.title
             self.amount = invoice.amount
             self.dueDate = invoice.dueDate
+            self.paidDate = invoice.paidDate
             self.isPaid = invoice.isPaid
         }
         .navigationTitle("Oppdater Faktura")
@@ -82,6 +88,7 @@ struct UpdateInvoiceView: View {
         invoice.title = title
         invoice.amount = amount
         invoice.dueDate = dueDate
+        invoice.paidDate = paidDate
         invoice.isPaid = isPaid
         
     }

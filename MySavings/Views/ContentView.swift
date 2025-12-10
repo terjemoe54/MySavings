@@ -17,7 +17,6 @@ struct ContentView: View {
     @State private var invoiceToEdit: Invoice?
     @State private var showConfirmation: Bool = false
     @State private var invoiceToDelete: Invoice?
-   
     
     var body: some View {
         NavigationStack {
@@ -26,11 +25,20 @@ struct ContentView: View {
                     ForEach(invoices) { invoice in
                         HStack {
                             VStack(alignment: .leading) {
-                                
+                                HStack {
+                                    Spacer()
+                                    Text("Forfall : \(invoice.displayDueDate)")
+                                    Spacer()
+                                    Text("Betalt : \(invoice.displayPaidDate)")
+                                    Spacer()
+                                }
+                                .font(.system(size: 15, weight: .bold))
+                                .padding(.vertical, 5)
+                                .background(Color.gray.opacity(0.4))
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
                                 Text(invoice.title)
                                     .font(.system(size: 15,weight: .bold))
-                                
-                                Text("\(invoice.dueDate, style: .date)")
+                                Text("\(invoice.displayAmount)")
                                     .font(.callout)
                                 HStack{
                                     if let customer = invoice.customer {
@@ -58,22 +66,8 @@ struct ContentView: View {
                                         }
                                     }
                                 }
-                                
                             }
                             Spacer()
-                            
-                            Button {
-                                withAnimation {
-                                    invoice.isPaid.toggle()
-                                }
-                            } label: {
-                                
-                                Image(systemName: "checkmark")
-                                    .symbolVariant(.circle.fill)
-                                    .foregroundStyle(invoice.isPaid ? .green : .gray)
-                                    .font(.largeTitle)
-                            }
-                            .buttonStyle(.plain)
                         }
                         .onTapGesture {
                             invoiceToEdit = invoice
@@ -86,7 +80,6 @@ struct ContentView: View {
                             }
                         }
                     }
-                    
                 }
                 FloatingButton()
             }
@@ -102,6 +95,12 @@ struct ContentView: View {
                         }
                     } label: {
                         Text("Slett")
+                    }
+                    
+                    Button(role: .confirm) {
+                        
+                    } label: {
+                        Text("Avbryt")
                     }
                 },
                 message: { item in
@@ -143,8 +142,8 @@ struct ContentView: View {
                 
             }
         }
-   }
-   
+    }
+    
     
     
     fileprivate func FloatingButton() -> some View {
@@ -163,7 +162,7 @@ struct ContentView: View {
             .padding(.bottom, 7)
         }
     }
- }
+}
 
 #Preview {
     ContentView()

@@ -37,4 +37,3 @@ struct UpdateCustomerView: View {
         .navigationTitle("Oppdater Kunder")
     }
 }
-

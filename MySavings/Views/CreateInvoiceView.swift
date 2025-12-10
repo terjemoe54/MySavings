@@ -10,15 +10,14 @@ import SwiftData
 struct CreateInvoiceView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
-    
     @Query private var invoices: [Invoice]
     @Query private var customers: [Customer]
-    
     @State private var invoice = Invoice()
     @State private var selectedCustomer: Customer?
     @State private var title = ""
     @State private var amount: Double = 0.0
     @State private var dueDate = Date()
+    @State private var paidDate = Date()
     @State private var isPaid: Bool = false
     
     var body: some View {
@@ -36,8 +35,11 @@ struct CreateInvoiceView: View {
                         TextField("Beløp", value: $amount, formatter: numberFormatter)
                             .keyboardType(.decimalPad)
                     }
-                    
-                    DatePicker("Forfalls Dato", selection: $dueDate, displayedComponents: .date)
+                    HStack {
+                        DatePicker("Forfalls Dato", selection: $dueDate, displayedComponents: .date)
+                        Spacer()
+                        DatePicker("Betalt Dato", selection: $paidDate, displayedComponents: .date)
+                    }
                     Toggle("Betalt:", isOn: $isPaid)
                 }
                 
@@ -87,6 +89,7 @@ extension CreateInvoiceView {
         invoice.title = title
         invoice.amount = amount
         invoice.dueDate = dueDate
+        invoice.paidDate = paidDate
         invoice.isPaid = isPaid
         
         modelContext.insert(invoice)

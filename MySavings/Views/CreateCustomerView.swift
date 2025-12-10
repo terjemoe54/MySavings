@@ -71,6 +71,12 @@ struct CreateCustomerView: View {
                             } label: {
                                 Text("Slett")
                             }
+                            
+                            Button(role: .confirm) {
+                                
+                            } label: {
+                                Text("Avbryt")
+                            }
                         },
                         message: { item in
                             Text("Er du sikker på at du vil slette \(item.title)?")
