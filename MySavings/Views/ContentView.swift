@@ -32,7 +32,7 @@ struct ContentView: View {
                                       Text("Betalt : \(invoice.displayPaidDate)")
                                     Spacer()
                                 }
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.system(size: 14, weight: .bold))
                                 .padding(.vertical, 5)
                                 .background(Color.gray.opacity(0.4))
                                 .clipShape(RoundedRectangle(cornerRadius: 5))

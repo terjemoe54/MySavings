@@ -55,6 +55,7 @@ enum TransactionType: String, CaseIterable, Identifiable, Codable {
 var numberFormatter: NumberFormatter {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal
+    numberFormatter.minimumFractionDigits = 2
     
     return numberFormatter
 }

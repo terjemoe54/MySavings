@@ -15,14 +15,14 @@ struct UpdateInvoiceView: View {
     @Bindable var invoice: Invoice
     @State private var amount = 0.0
     @State private var title = ""
-    @State private var type = TransactionType.income
+    @State private var type = TransactionType.expense
     @State private var state: TransactionState = .pending
     @State private var dueDate: Date = Date()
     @State private var paidDate: Date = Date()
     @State private var isPaid: Bool = false
-    @State private var selectedType: TransactionType = .income
+    @State private var selectedType: TransactionType = .expense
     @State private var selectedState: TransactionState = .pending
-    @State private var interval = 0
+    @State private var interval = 1
     
     var body: some View {
         List {
@@ -41,7 +41,13 @@ struct UpdateInvoiceView: View {
                 DatePicker("Betalt dato",
                            selection: $paidDate, displayedComponents: .date)
                 
-                Toggle("Betalt ?", isOn: $isPaid)
+           //    Toggle("Betalt ?", isOn: $isPaid)
+                
+                HStack{
+                    Text("Beløp:")
+                    TextField("Beløp", value: $amount, formatter: numberFormatter)
+                        .keyboardType(.decimalPad)
+                }
                 
                 // Picker for Expense / Income
                 Picker("Velg Type", selection: $selectedType) {

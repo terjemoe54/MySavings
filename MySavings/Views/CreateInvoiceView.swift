@@ -18,10 +18,10 @@ struct CreateInvoiceView: View {
     @State private var amount: Double = 0.0
     @State private var dueDate = Date()
     @State private var paidDate = Date()
-    @State private var selectedType: TransactionType = .income
+    @State private var selectedType: TransactionType = .expense
     @State private var selectedState: TransactionState = .pending
     @State private var isPaid: Bool = false
-    @State private var interval = 0
+    @State private var interval = 1
     
     var body: some View {
         NavigationStack {
@@ -41,7 +41,7 @@ struct CreateInvoiceView: View {
                        DatePicker("Forfallsdato:", selection: $dueDate, displayedComponents: .date)
                        DatePicker("Belalt Dato:", selection: $paidDate, displayedComponents: .date)
                        
-                    Toggle("Betalt:", isOn: $isPaid)
+                  //  Toggle("Betalt:", isOn: $isPaid)
                     
                     // Picker for Expense / Income
                     Picker("Velg Type", selection: $selectedType) {

@@ -13,8 +13,8 @@ import SwiftData
 
 @Model
 class Customer {
-    @Attribute(.unique)
-    var title: String
+   // @Attribute(.unique)
+    var title: String = ""
     @Relationship(deleteRule: .cascade, inverse: \Invoice.customer)
     var invoices: [Invoice]?
     
@@ -25,20 +25,20 @@ class Customer {
 
 @Model
 class Invoice {
-    var id: UUID = UUID()
-    var title: String
-    var type: TransactionType
-    var state: TransactionState
-    var dueDate: Date
-    var paidDate: Date
-    var amount: Double
-    var isPaid: Bool
-    var interval: Int
+   // var id: UUID = UUID()
+    var title: String = ""
+    var type: TransactionType = TransactionType.expense
+    var state: TransactionState = TransactionState.pending
+    var dueDate: Date = Date()
+    var paidDate: Date = Date()
+    var amount: Double = 0.0
+    var isPaid: Bool = false
+    var interval: Int = 0
     var customer: Customer?
     
     init(
         title: String = "",
-        type: TransactionType = .income,
+        type: TransactionType = .expense,
         state: TransactionState = .pending,
         dueDate: Date = .now,
         paidDate: Date = .now,
