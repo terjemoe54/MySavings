@@ -15,6 +15,7 @@ struct UpdateCustomerView: View {
     @Bindable var customer: Customer
     @State private var title = ""
     
+    
     var body: some View {
         List {
             Section("Kunder") {

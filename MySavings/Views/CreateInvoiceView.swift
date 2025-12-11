@@ -18,7 +18,10 @@ struct CreateInvoiceView: View {
     @State private var amount: Double = 0.0
     @State private var dueDate = Date()
     @State private var paidDate = Date()
+    @State private var selectedType: TransactionType = .income
+    @State private var selectedState: TransactionState = .pending
     @State private var isPaid: Bool = false
+    @State private var interval = 0
     
     var body: some View {
         NavigationStack {
@@ -35,16 +38,38 @@ struct CreateInvoiceView: View {
                         TextField("Beløp", value: $amount, formatter: numberFormatter)
                             .keyboardType(.decimalPad)
                     }
-                    HStack {
-                        DatePicker("Forfalls Dato", selection: $dueDate, displayedComponents: .date)
-                        Spacer()
-                        DatePicker("Betalt Dato", selection: $paidDate, displayedComponents: .date)
-                    }
+                       DatePicker("Forfallsdato:", selection: $dueDate, displayedComponents: .date)
+                       DatePicker("Belalt Dato:", selection: $paidDate, displayedComponents: .date)
+                       
                     Toggle("Betalt:", isOn: $isPaid)
-                }
+                    
+                    // Picker for Expense / Income
+                    Picker("Velg Type", selection: $selectedType) {
+                        ForEach(TransactionType.allCases) { transactionType in
+                            Text(transactionType.title)
+                                .tag(transactionType)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal, 50)
+                    
+                    // Picker for Pending / Payed / Recieved / Taken
+                    Picker("Velg Type", selection: $selectedState) {
+                        ForEach(TransactionState.allCases) { transactionState in
+                            Text(transactionState.title)
+                                .tag(transactionState)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    HStack{
+                     Text("Intervall i måneder:")
+                        TextField("Intervall", value: $interval,formatter: intFormatter)
+                            .keyboardType(.decimalPad)
+                    }
+                    }
                 
-                Section("Velg en Kunde") {
-                    Picker("", selection: $selectedCustomer){
+                Section {
+                    Picker("Velg en Kunde", selection: $selectedCustomer){
                         ForEach(customers.sorted { $0.title < $1.title }) { customer in
                             Text(customer.title)
                                 .tag(customer as Customer?)
@@ -56,13 +81,13 @@ struct CreateInvoiceView: View {
                     }
                 }
                 
-                Section {
-                    Button("Opprett"){
-                        save()
-                        dismiss()
-                    }
-                    .disabled(title.isEmpty)
-                }
+//               Section("") {
+//                    Button("Opprett"){
+//                        save()
+//                        dismiss()
+//                    }
+//                    .disabled(title.isEmpty)
+//                }
             }
             .navigationTitle("Opprett Faktura")
             .toolbar {
@@ -70,6 +95,14 @@ struct CreateInvoiceView: View {
                     Button("Avslutt"){
                         dismiss()
                     }
+                }
+                ToolbarItem(placement: .bottomBar){
+                    Button("Opprett"){
+                        save()
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(title.isEmpty)
                 }
             }
         }
@@ -87,13 +120,16 @@ extension CreateInvoiceView {
     func save() {
         // Lagrer verdiene til databasen og oppdaterer relasjon
         invoice.title = title
+        invoice.type = selectedType
+        invoice.state = selectedState
         invoice.amount = amount
         invoice.dueDate = dueDate
         invoice.paidDate = paidDate
         invoice.isPaid = isPaid
-        
+        invoice.interval = interval
         modelContext.insert(invoice)
         invoice.customer = selectedCustomer
         selectedCustomer?.invoices?.append(invoice)
+        try? modelContext.save()
     }
 }

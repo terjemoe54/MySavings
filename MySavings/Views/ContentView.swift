@@ -27,9 +27,9 @@ struct ContentView: View {
                             VStack(alignment: .leading) {
                                 HStack {
                                     Spacer()
-                                    Text("Forfall : \(invoice.displayDueDate)")
-                                    Spacer()
-                                    Text("Betalt : \(invoice.displayPaidDate)")
+                                      Text("Forfall : \(invoice.displayDueDate)")
+                                        Spacer()
+                                      Text("Betalt : \(invoice.displayPaidDate)")
                                     Spacer()
                                 }
                                 .font(.system(size: 15, weight: .bold))
@@ -92,12 +92,12 @@ struct ContentView: View {
                     Button(role: .destructive) {
                         withAnimation {
                             modelContext.delete(item)
+                            try? modelContext.save()
                         }
                     } label: {
                         Text("Slett")
                     }
-                    
-                    Button(role: .confirm) {
+                     Button(role: .confirm) {
                         
                     } label: {
                         Text("Avbryt")

@@ -15,9 +15,14 @@ struct UpdateInvoiceView: View {
     @Bindable var invoice: Invoice
     @State private var amount = 0.0
     @State private var title = ""
+    @State private var type = TransactionType.income
+    @State private var state: TransactionState = .pending
     @State private var dueDate: Date = Date()
     @State private var paidDate: Date = Date()
     @State private var isPaid: Bool = false
+    @State private var selectedType: TransactionType = .income
+    @State private var selectedState: TransactionState = .pending
+    @State private var interval = 0
     
     var body: some View {
         List {
@@ -26,13 +31,10 @@ struct UpdateInvoiceView: View {
                     .autocorrectionDisabled(true)
                     .textInputAutocapitalization(.sentences)
             }
-            HStack{
-                Text("Beløp:")
-                TextField("Beløp", value: $amount, formatter: numberFormatter)
-                    .keyboardType(.decimalPad)
-            }
-            
-            Section {
+                      
+            Section("Detaljer") {
+           
+                
                 DatePicker("Forfallsdato",
                            selection: $dueDate, displayedComponents: .date)
                 
@@ -40,10 +42,34 @@ struct UpdateInvoiceView: View {
                            selection: $paidDate, displayedComponents: .date)
                 
                 Toggle("Betalt ?", isOn: $isPaid)
+                
+                // Picker for Expense / Income
+                Picker("Velg Type", selection: $selectedType) {
+                    ForEach(TransactionType.allCases) { transactionType in
+                        Text(transactionType.title)
+                            .tag(transactionType)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal, 50)
+                
+                // Picker for Pending / Payed / Recieved / Taken
+                Picker("Velg Type", selection: $selectedState) {
+                    ForEach(TransactionState.allCases) { transactionState in
+                        Text(transactionState.title)
+                            .tag(transactionState)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                HStack{
+                 Text("Intervall i måneder:")
+                    TextField("Intervall", value: $interval,formatter: intFormatter)
+                        .keyboardType(.decimalPad)
+                }
             }
             
-            Section("Velg en Kunde") {
-                Picker("", selection: $invoice.customer){
+            
+                Picker("Velg en Kunde", selection: $invoice.customer){
                     ForEach(customers) { customer in
                         Text(customer.title)
                             .tag(customer as Customer?)
@@ -53,7 +79,7 @@ struct UpdateInvoiceView: View {
                     Text("Ingen")
                         .tag(nil as Customer?)
                 }
-            }
+            
             
             Section {
                 HStack {
@@ -74,11 +100,18 @@ struct UpdateInvoiceView: View {
         }
         .onAppear() {
             // Laster inn verdier til variablene fra databasen når vi åpner listen
+            
+            selectedType = invoice.type
+            selectedState = invoice.state
+            
             self.title = invoice.title
+            self.type = invoice.type
+            self.state = invoice.state
             self.amount = invoice.amount
             self.dueDate = invoice.dueDate
             self.paidDate = invoice.paidDate
             self.isPaid = invoice.isPaid
+            self.interval = invoice.interval
         }
         .navigationTitle("Oppdater Faktura")
         
@@ -86,11 +119,13 @@ struct UpdateInvoiceView: View {
     func updateInvoice() {
         // setter verdiene fra variablene til databasen
         invoice.title = title
+        invoice.type = selectedType
+        invoice.state = selectedState
         invoice.amount = amount
         invoice.dueDate = dueDate
         invoice.paidDate = paidDate
         invoice.isPaid = isPaid
-        
+        invoice.interval = interval
     }
 }
 

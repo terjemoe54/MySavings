@@ -47,12 +47,6 @@ struct CreateCustomerView: View {
                                 } label: {
                                     Label("Slett" , systemImage: "trash.fill")
                                 }
-                                Button {
-                                    customerToEdit = customer
-                                } label: {
-                                    Label("Endre", systemImage: "pencil")
-                                }
-                                .tint(.orange)
                             }
                             .onTapGesture {
                                 customerToEdit = customer
@@ -67,19 +61,19 @@ struct CreateCustomerView: View {
                             Button(role: .destructive) {
                                 withAnimation {
                                     modelContext.delete(item)
+                                    try? modelContext.save()
                                 }
                             } label: {
                                 Text("Slett")
                             }
-                            
-                            Button(role: .confirm) {
+                             Button(role: .confirm) {
                                 
                             } label: {
                                 Text("Avbryt")
                             }
                         },
                         message: { item in
-                            Text("Er du sikker på at du vil slette \(item.title)?")
+                            Text("Alle poster registrert på \(item.title) Blir også Slettet")
                         })
                 }
             }

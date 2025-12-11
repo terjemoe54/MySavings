@@ -59,4 +59,8 @@ var numberFormatter: NumberFormatter {
     return numberFormatter
 }
 
-
+var intFormatter: NumberFormatter {
+    let numberFormatter = NumberFormatter()
+    numberFormatter.numberStyle = .none
+    return numberFormatter
+}

@@ -25,25 +25,35 @@ class Customer {
 
 @Model
 class Invoice {
+    var id: UUID = UUID()
     var title: String
+    var type: TransactionType
+    var state: TransactionState
     var dueDate: Date
     var paidDate: Date
     var amount: Double
     var isPaid: Bool
+    var interval: Int
     var customer: Customer?
     
     init(
         title: String = "",
+        type: TransactionType = .income,
+        state: TransactionState = .pending,
         dueDate: Date = .now,
         paidDate: Date = .now,
         amount: Double = 0.0,
-        isPaid: Bool = false
+        isPaid: Bool = false,
+        interval: Int = 0
     ) {
         self.title = title
+        self.type = type
+        self.state = state
         self.dueDate = dueDate
         self.paidDate = paidDate
         self.amount = amount
         self.isPaid = isPaid
+        self.interval = interval
     }
     
     @Transient
