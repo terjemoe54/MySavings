@@ -36,20 +36,24 @@ struct ContentView: View {
                                 .padding(.vertical, 5)
                                 .background(Color.gray.opacity(0.4))
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
-                                Text(invoice.title)
-                                    .font(.system(size: 15,weight: .bold))
-                                Text("\(invoice.displayAmount)")
-                                    .font(.callout)
+                                HStack{
+                                    Text(invoice.title)
+                                        .font(.system(size: 15,weight: .bold))
+                                    Spacer()
+                                    Text("\(invoice.displayAmount)")
+                                        .font(.callout)
+                                }
+                                .padding(.horizontal, 8)
                                 HStack{
                                     if let customer = invoice.customer {
                                         Text(customer.title)
-                                            .foregroundStyle(Color.blue)
+                                            .font(.system(size: 14,weight:.bold))
+                                            .foregroundStyle(Color.black)
                                             .bold()
                                             .padding(.horizontal)
                                             .padding(.vertical, 8)
-                                            .background(Color.blue.opacity(0.1),
-                                                        in: RoundedRectangle(cornerRadius: 8,
-                                                                             style: .continuous))
+                                            .background(Color.blue.opacity(0.2),
+                                                        in: RoundedRectangle(cornerRadius: 8))
                                     }
                                     
                                     if invoice.isPaid {
