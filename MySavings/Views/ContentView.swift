@@ -27,15 +27,16 @@ struct ContentView: View {
                             VStack(alignment: .leading) {
                                 HStack {
                                     Spacer()
-                                      Text("Forfall : \(invoice.displayDueDate)")
-                                        Spacer()
-                                      Text("Betalt : \(invoice.displayPaidDate)")
+                                    Text("Forfall : \(invoice.displayDueDate)")
+                                    Spacer()
+                                    Text("Betalt : \(invoice.displayPaidDate)")
                                     Spacer()
                                 }
                                 .font(.system(size: 14, weight: .bold))
                                 .padding(.vertical, 5)
                                 .background(Color.gray.opacity(0.4))
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
+                                
                                 HStack{
                                     Text(invoice.title)
                                         .font(.system(size: 15,weight: .bold))
@@ -44,35 +45,42 @@ struct ContentView: View {
                                         .font(.callout)
                                 }
                                 .padding(.horizontal, 8)
-                                HStack{
-                                    if let customer = invoice.customer {
-                                        Text(customer.title)
-                                            .font(.system(size: 14,weight:.bold))
-                                            .foregroundStyle(Color.black)
-                                            .bold()
-                                            .padding(.horizontal)
-                                            .padding(.vertical, 8)
-                                            .background(Color.blue.opacity(0.2),
-                                                        in: RoundedRectangle(cornerRadius: 8))
+                                
+                                HStack {
+                                    Image(systemName: invoice.type == .income ? "arrow.up.forward" : "arrow.down.forward")
+                                        .font(.system(size: 16, weight: .bold ))
+                                        .foregroundStyle(invoice.type == .income ? Color.green : Color.red)
+                                    
+                                    HStack{
+                                        if let customer = invoice.customer {
+                                            Text(customer.title)
+                                                .font(.system(size: 14,weight:.bold))
+                                                .foregroundStyle(Color.black)
+                                                .bold()
+                                            // .padding(.horizontal)
+                                                .padding(.vertical, 2)
+                                                .background(Color.blue.opacity(0.2),
+                                                            in: RoundedRectangle(cornerRadius: 8))
+                                        }
                                     }
                                     
-                                    if invoice.isPaid {
-                                        HStack{
-                                            Text("PAID")
-                                                .font(.system(size: 16,weight: .bold))
-                                                .foregroundStyle(.green)
-                                            
-                                            Image(systemName: "heart.fill")
-                                                .symbolVariant(.fill)
-                                                .foregroundColor(.red)
-                                                .font(.system(size: 16,weight: .bold))
-                                                .bold()
-                                        }
+                                    HStack{
+                                        Spacer()
+                                        Text("\(invoice.state.title)")
+                                            .font(.system(size: 14,weight: .bold))
+                                            .foregroundStyle(invoice.state.color)
+                                        Spacer()
+                                        
+                                        Text("\(invoice.type.title)")
+                                            .font(.system(size: 14,weight: .bold))
+                                            .foregroundStyle(invoice.type.color)
+                                            .padding(.horizontal)
                                     }
                                 }
                             }
                             Spacer()
                         }
+                        .listRowSeparator(.hidden)
                         .onTapGesture {
                             invoiceToEdit = invoice
                         }
@@ -101,7 +109,7 @@ struct ContentView: View {
                     } label: {
                         Text("Slett")
                     }
-                     Button(role: .confirm) {
+                    Button(role: .confirm) {
                         
                     } label: {
                         Text("Avbryt")
@@ -143,13 +151,10 @@ struct ContentView: View {
                     .font(.system(size: 15, weight: .bold))
                     .padding(8)
                 }
-                
             }
         }
     }
-    
-    
-    
+  
     fileprivate func FloatingButton() -> some View {
         VStack {
             Spacer()

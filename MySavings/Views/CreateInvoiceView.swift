@@ -38,11 +38,9 @@ struct CreateInvoiceView: View {
                         TextField("Beløp", value: $amount, formatter: numberFormatter)
                             .keyboardType(.decimalPad)
                     }
-                       DatePicker("Forfallsdato:", selection: $dueDate, displayedComponents: .date)
-                       DatePicker("Belalt Dato:", selection: $paidDate, displayedComponents: .date)
-                       
-                  //  Toggle("Betalt:", isOn: $isPaid)
-                    
+                    DatePicker("Forfallsdato:", selection: $dueDate, displayedComponents: .date)
+                    DatePicker("Belalt Dato:", selection: $paidDate, displayedComponents: .date)
+    
                     // Picker for Expense / Income
                     Picker("Velg Type", selection: $selectedType) {
                         ForEach(TransactionType.allCases) { transactionType in
@@ -62,11 +60,11 @@ struct CreateInvoiceView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     HStack{
-                     Text("Intervall i måneder:")
+                        Text("Intervall i måneder:")
                         TextField("Intervall", value: $interval,formatter: intFormatter)
                             .keyboardType(.decimalPad)
                     }
-                    }
+                }
                 
                 Section {
                     Picker("Velg en Kunde", selection: $selectedCustomer){
@@ -80,14 +78,6 @@ struct CreateInvoiceView: View {
                             .tag(nil as Customer?)
                     }
                 }
-                
-//               Section("") {
-//                    Button("Opprett"){
-//                        save()
-//                        dismiss()
-//                    }
-//                    .disabled(title.isEmpty)
-//                }
             }
             .navigationTitle("Opprett Faktura")
             .toolbar {

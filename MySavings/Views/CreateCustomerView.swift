@@ -66,7 +66,7 @@ struct CreateCustomerView: View {
                             } label: {
                                 Text("Slett")
                             }
-                             Button(role: .confirm) {
+                            Button(role: .confirm) {
                                 
                             } label: {
                                 Text("Avbryt")

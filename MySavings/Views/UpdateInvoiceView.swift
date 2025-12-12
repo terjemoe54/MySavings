@@ -31,18 +31,13 @@ struct UpdateInvoiceView: View {
                     .autocorrectionDisabled(true)
                     .textInputAutocapitalization(.sentences)
             }
-                      
-            Section("Detaljer") {
-           
+            
+            Section {
                 
                 DatePicker("Forfallsdato",
                            selection: $dueDate, displayedComponents: .date)
-                
                 DatePicker("Betalt dato",
                            selection: $paidDate, displayedComponents: .date)
-                
-           //    Toggle("Betalt ?", isOn: $isPaid)
-                
                 HStack{
                     Text("Beløp:")
                     TextField("Beløp", value: $amount, formatter: numberFormatter)
@@ -68,13 +63,11 @@ struct UpdateInvoiceView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 HStack{
-                 Text("Intervall i måneder:")
+                    Text("Intervall i måneder:")
                     TextField("Intervall", value: $interval,formatter: intFormatter)
                         .keyboardType(.decimalPad)
                 }
-            }
-            
-            
+                
                 Picker("Velg en Kunde", selection: $invoice.customer){
                     ForEach(customers) { customer in
                         Text(customer.title)
@@ -85,7 +78,7 @@ struct UpdateInvoiceView: View {
                     Text("Ingen")
                         .tag(nil as Customer?)
                 }
-            
+            }
             
             Section {
                 HStack {
@@ -94,9 +87,7 @@ struct UpdateInvoiceView: View {
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)
-                    
                     Spacer()
-                    
                     Button("Avbryt") {
                         dismiss()
                     }
