@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
+struct ListInvoiceView: View {
     // Herfra
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @AppStorage("ShowName") private var showName = false
@@ -204,6 +204,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ListInvoiceView()
         .modelContainer(for: Invoice.self, inMemory: true)
 }

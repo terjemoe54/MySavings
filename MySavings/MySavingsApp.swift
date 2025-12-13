@@ -12,7 +12,7 @@ import SwiftData
 struct MySavingsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ListInvoiceView()
             .modelContainer(for: Invoice.self)
      }
   }
