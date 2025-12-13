@@ -96,6 +96,7 @@ struct CreateCustomerView: View {
                 }
             }
         }
+      
     }
 }
 

@@ -9,6 +9,22 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    // Herfra
+    @AppStorage("darkModeEnambled") private var darkModeEnabled = false
+    @AppStorage("ShowName") private var showName = false
+    @AppStorage("YourName") private var name: String = ""
+    @AppStorage("TaxPercent") private var tax: String = ""
+    @AppStorage("filterMinimum") var filterMinimum = 1.0
+    @AppStorage("orderDescending") var orderDescending = false
+    @AppStorage("showExpenses") var showExpenses = true
+    @AppStorage("fromDate") var fromDate = Date()
+    @AppStorage("toDate") var toDate = Date()
+    @AppStorage("sortPaid") var sortPaid = false
+    
+    @State private var showingSettings = false
+    @State private var showAddTransactionView = false
+    @Environment(\.colorScheme) var colorScheme
+    // Til Her
     
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Invoice.dueDate, order: .forward) private var invoices: [Invoice]
@@ -55,12 +71,10 @@ struct ContentView: View {
                                         if let customer = invoice.customer {
                                             Text(customer.title)
                                                 .font(.system(size: 14,weight:.bold))
-                                                .foregroundStyle(Color.black)
+                                                .foregroundStyle(colorScheme == .dark ? .white : .black)
                                                 .bold()
-                                            // .padding(.horizontal)
                                                 .padding(.vertical, 2)
-                                                .background(Color.blue.opacity(0.2),
-                                                            in: RoundedRectangle(cornerRadius: 8))
+                                                .background(Color.blue.opacity(0.2), in: RoundedRectangle(cornerRadius: 8))
                                         }
                                     }
                                     
@@ -143,7 +157,7 @@ struct ContentView: View {
                 }
             })
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("Kunder \(Image(systemName: "person.2.fill"))") {
                         showCreateCustomer.toggle()
                     }
@@ -152,7 +166,23 @@ struct ContentView: View {
                     .padding(8)
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                    showingSettings = true
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .foregroundStyle(darkModeEnabled ? Color.white : Color.black)
+                    }
+                }
+                
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView(name: $name, tax: $tax, filterMinimum: $filterMinimum, darkModeEnabled: $darkModeEnabled, showName: $showName, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
+               
+            }
         }
+        .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }
   
     fileprivate func FloatingButton() -> some View {
