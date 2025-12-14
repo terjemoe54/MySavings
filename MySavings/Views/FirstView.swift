@@ -3,7 +3,7 @@
 //  MySavings
 //
 //  Created by Terje Moe on 13/12/2025.
-//
+// 14.12.25
 
 import SwiftUI
 import SwiftData
