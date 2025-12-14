@@ -13,7 +13,6 @@ struct ListInvoiceView: View {
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @AppStorage("ShowName") private var showName = false
     @AppStorage("YourName") private var name: String = ""
-    @AppStorage("TaxPercent") private var tax: String = ""
     @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("orderDescending") var orderDescending = false
     @AppStorage("showExpenses") var showExpenses = true
@@ -178,9 +177,8 @@ struct ListInvoiceView: View {
                 
             }
             .sheet(isPresented: $showingSettings) {
-                SettingsView(name: $name, tax: $tax, filterMinimum: $filterMinimum, darkModeEnabled: $darkModeEnabled, showName: $showName, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
-               
-            }
+                SettingsView(name: $name,filterMinimum: $filterMinimum, darkModeEnabled: $darkModeEnabled, showName: $showName, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
+           }
         }
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }

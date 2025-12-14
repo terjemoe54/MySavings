@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SettingsView: View {
     @Binding var name: String
-    @Binding var tax: String
     @Binding var filterMinimum: Double
     @Binding var darkModeEnabled: Bool
     @Binding var showName: Bool
@@ -24,12 +23,9 @@ struct SettingsView: View {
             Form {
                 Section(header: Text("Display"),
                         footer: Text("")) {
-                    
                     Toggle(isOn: $darkModeEnabled) {
-                        
                         Text(!darkModeEnabled ? "Dag modus" : "Natt modus")
-                        
-                    }
+                        }
                     
                     Toggle(isOn: $showName) {
                         Text(!showName ? "Skjult bruker navn" : "Vist bruker navn")
@@ -39,10 +35,8 @@ struct SettingsView: View {
                         TextField("Navn:", text: $name)
                     }
                 }
-                
                 Section(header: Text("Sortering / Filter"),
                         footer: Text("")) {
-                    
                     Toggle(isOn: $orderDescending) {
                         Text(!orderDescending ? "Dato (Elste først)" :"Dato (Nyeste først)")
                     }
@@ -50,16 +44,13 @@ struct SettingsView: View {
                        Toggle(isOn: $showExpenses) {
                             Text("Vis Bare Utgifter")
                         }
-                        
                         HStack {
                             Text("Minimumsbeløp:")
                             TextField("Beløp :", value: $filterMinimum, formatter: NumberFormatter())
                         }
-                        
                         Toggle(isOn: $sortPaid) {
                             Text(!sortPaid ? "Forfalls-Dato" : "Betalt-Dato")
                          }
-                        
                         HStack{
                             VStack (alignment: .center) {
                                 Text("Fra Dato")
@@ -68,8 +59,7 @@ struct SettingsView: View {
                                            displayedComponents: .date)
                                 .padding(.trailing)
                             }
-                                 
-                            VStack (alignment: .center) {
+                       VStack (alignment: .center) {
                                 Text("Til Dato")
                                     .padding(.leading)
                                   DatePicker("", selection: $toDate,
@@ -106,5 +96,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(name: .constant("Tomle Hue"), tax: .constant("18"), filterMinimum: .constant(0.0), darkModeEnabled: .constant(false), showName: .constant(false), orderDescending: .constant(false), showExpenses: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false))
+    SettingsView(name: .constant("Tomle Hue"), filterMinimum: .constant(0.0), darkModeEnabled: .constant(false), showName: .constant(false), orderDescending: .constant(false), showExpenses: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false))
 }
