@@ -23,6 +23,7 @@ struct UpdateInvoiceView: View {
     @State private var selectedType: TransactionType = .expense
     @State private var selectedState: TransactionState = .pending
     @State private var interval = 1
+    @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     
     var body: some View {
         List {
@@ -95,6 +96,7 @@ struct UpdateInvoiceView: View {
                 }
             }
         }
+        .preferredColorScheme(darkModeEnabled ? .dark : .light)
         .onAppear() {
             // Laster inn verdier til variablene fra databasen når vi åpner listen
             

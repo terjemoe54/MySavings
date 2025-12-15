@@ -14,6 +14,7 @@ struct UpdateCustomerView: View {
     @Query(sort: \Customer.title, order: .forward) private var customers: [Customer]
     @Bindable var customer: Customer
     @State private var title = ""
+    @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     
     
     var body: some View {
@@ -31,6 +32,7 @@ struct UpdateCustomerView: View {
                 }
             }
         }
+        .preferredColorScheme(darkModeEnabled ? .dark : .light)
         .onAppear() {
             // Laster inn verdier til variablene fra databasen når vi åpner listen
             self.title = customer.title

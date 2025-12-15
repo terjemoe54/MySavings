@@ -11,8 +11,6 @@ import SwiftData
 struct ListInvoiceView: View {
     // Herfra
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
-    @AppStorage("ShowName") private var showName = false
-    @AppStorage("YourName") private var name: String = ""
     @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("orderDescending") var orderDescending = false
     @AppStorage("showExpenses") var showExpenses = true
@@ -20,7 +18,7 @@ struct ListInvoiceView: View {
     @AppStorage("toDate") var toDate = Date()
     @AppStorage("sortPaid") var sortPaid = false
     
-    @State private var showingSettings = false
+    @State private var showFilters = false
     @State private var showAddTransactionView = false
     @Environment(\.colorScheme) var colorScheme
     // Til Her
@@ -131,8 +129,6 @@ struct ListInvoiceView: View {
                 message: { item in
                     Text("Er du sikker på at du vil slette \(item.title)?")
                 })
-            .navigationTitle("Faktura Liste")
-            .bold()
             .sheet(item: $invoiceToEdit,
                    onDismiss: {
                 invoiceToEdit = nil
@@ -168,17 +164,21 @@ struct ListInvoiceView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                    showingSettings = true
+                    showFilters = true
                     } label: {
-                        Image(systemName: "gearshape.fill")
-                            .foregroundStyle(darkModeEnabled ? Color.white : Color.black)
-                    }
+                        HStack {
+                            Text("Filtere")
+                            Image(systemName: "engine.emission.and.filter")
+                                .foregroundStyle(darkModeEnabled ? Color.white : Color.black)
+                        }
+                        
+                        }
+                    .buttonStyle(.borderedProminent)
                 }
-                
             }
-            .sheet(isPresented: $showingSettings) {
-                SettingsView(name: $name,filterMinimum: $filterMinimum, darkModeEnabled: $darkModeEnabled, showName: $showName, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
-           }
+            .sheet(isPresented: $showFilters) {
+                FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
+          }
         }
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }

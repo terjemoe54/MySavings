@@ -22,6 +22,7 @@ struct CreateInvoiceView: View {
     @State private var selectedState: TransactionState = .pending
     @State private var isPaid: Bool = false
     @State private var interval = 1
+    @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     
     var body: some View {
         NavigationStack {
@@ -96,6 +97,7 @@ struct CreateInvoiceView: View {
                 }
             }
         }
+        .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }
 }
 

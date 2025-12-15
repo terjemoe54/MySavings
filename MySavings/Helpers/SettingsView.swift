@@ -9,14 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @Binding var name: String
-    @Binding var filterMinimum: Double
     @Binding var darkModeEnabled: Bool
     @Binding var showName: Bool
-    @Binding var orderDescending: Bool
-    @Binding var showExpenses: Bool
-    @Binding var fromDate: Date
-    @Binding var toDate: Date
-    @Binding var sortPaid: Bool
     
     var body: some View {
         NavigationView {
@@ -35,41 +29,6 @@ struct SettingsView: View {
                         TextField("Navn:", text: $name)
                     }
                 }
-                Section(header: Text("Sortering / Filter"),
-                        footer: Text("")) {
-                    Toggle(isOn: $orderDescending) {
-                        Text(!orderDescending ? "Dato (Elste først)" :"Dato (Nyeste først)")
-                    }
-                    VStack {
-                       Toggle(isOn: $showExpenses) {
-                            Text("Vis Bare Utgifter")
-                        }
-                        HStack {
-                            Text("Minimumsbeløp:")
-                            TextField("Beløp :", value: $filterMinimum, formatter: NumberFormatter())
-                        }
-                        Toggle(isOn: $sortPaid) {
-                            Text(!sortPaid ? "Forfalls-Dato" : "Betalt-Dato")
-                         }
-                        HStack{
-                            VStack (alignment: .center) {
-                                Text("Fra Dato")
-                                    .padding(.leading)
-                                  DatePicker("", selection: $fromDate,
-                                           displayedComponents: .date)
-                                .padding(.trailing)
-                            }
-                       VStack (alignment: .center) {
-                                Text("Til Dato")
-                                    .padding(.leading)
-                                  DatePicker("", selection: $toDate,
-                                           displayedComponents: .date)
-                                .padding(.trailing)
-                            }
-                        }
-                    }
-                }
-                
                 Section {
                     Link(destination: URL(string: Constants.web)!,
                          label: {
@@ -96,5 +55,6 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(name: .constant("Tomle Hue"), filterMinimum: .constant(0.0), darkModeEnabled: .constant(false), showName: .constant(false), orderDescending: .constant(false), showExpenses: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false))
+    SettingsView(name: .constant("Tomle Hue"), darkModeEnabled: .constant(false), showName: .constant(false))
 }
+

@@ -13,34 +13,40 @@ struct FirstView: View {
     @AppStorage("ShowName") private var showName = false
     @AppStorage("YourName") private var name: String = ""
     @AppStorage("filterMinimum") var filterMinimum = 1.0
-    @AppStorage("orderDescending") var orderDescending = false
     @AppStorage("showExpenses") var showExpenses = true
-    @AppStorage("fromDate") var fromDate = Date()
-    @AppStorage("toDate") var toDate = Date()
-    @AppStorage("sortPaid") var sortPaid = false
     @State private var showCreateCustomer = false
     @State private var showInvoiceList = false
     @State private var showingSettings = false
     @Environment(\.colorScheme) var colorScheme
+    
+    @Environment(\.modelContext) private var context
+    @Query var transactions: [Invoice]
+    let calendar = Calendar.current
+    
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(Color.gray)
+                
+                Color(Color.cyan)
                     .ignoresSafeArea()
-                    .opacity(0.3)
+                    .opacity(0.1)
+               
                 Image("CityView")
                     .resizable()
-                    .scaledToFill()
+                    .scaledToFit()
                     .opacity(0.6)
                     .ignoresSafeArea()
+                
                 VStack {
-                    Text(name)
+                    
+                    Text(showName ? name : "")
                         .font(.largeTitle)
                         .bold()
                         .foregroundStyle(Color.blue)
-                        
+                BalanceView()
                     Spacer()
-                    HStack {
+                    
+                 HStack {
                         Spacer()
                         VStack {
                             Button {
@@ -52,15 +58,12 @@ struct FirstView: View {
                             }
                             .buttonStyle(.borderedProminent)
                             Text("Kunder")
-                                .font(.system(size: 25, weight: .bold))
-                                .background(.blue)
+                                .font(.system(size: 25, weight: .black))
                                 .opacity(0.3)
                                 .foregroundColor(.black)
                         }
-                        .padding()
-                        .padding(.horizontal,35)
-                        
-                        VStack {
+                        .padding(.horizontal)
+                     VStack {
                             Button {
                                 showInvoiceList.toggle()
                             } label: {
@@ -70,13 +73,11 @@ struct FirstView: View {
                             }
                             .buttonStyle(.borderedProminent)
                             Text("Fakturaer")
-                                .font(.system(size: 25, weight: .bold))
-                                .background(.blue)
+                                .font(.system(size: 25, weight: .black))
                                 .opacity(0.3)
                                 .foregroundColor(.black)
                         }
-                        .padding()
-                        .padding(.horizontal,35)
+                       .padding(.horizontal)
                         Spacer()
                     }
                 }
@@ -106,10 +107,100 @@ struct FirstView: View {
             })
             
             .sheet(isPresented: $showingSettings) {
-            SettingsView(name: $name,filterMinimum: $filterMinimum, darkModeEnabled: $darkModeEnabled, showName: $showName, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
+            SettingsView(name: $name, darkModeEnabled: $darkModeEnabled, showName: $showName)
             }
         }
+        .preferredColorScheme(darkModeEnabled ? .dark : .light)
      }
+   // Her begynner funcsjoner
+    
+    private var expenses: String {
+        let sumExpenses =  transactions.filter({ $0.type == .expense &&  $0.amount > filterMinimum }).reduce(0, { $0 + $1.amount})
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.maximumFractionDigits = 2
+        
+        return numberFormatter.string(from: sumExpenses as NSNumber) ?? "NOK 0.00"
+        
+    }
+    
+    private var income: String {
+        let sumIncome =  transactions.filter({ $0.type == .income &&  $0.amount > filterMinimum }).reduce(0, { $0 + $1.amount})
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.maximumFractionDigits = 2
+        guard !showExpenses else {
+            return "0.00"
+        }
+        return numberFormatter.string(from: sumIncome as NSNumber) ?? "NOK 0.00"
+        
+    }
+    
+    private var total: String {
+        let sumExpenses =  transactions.filter({ $0.type == .expense &&  $0.amount > filterMinimum }).reduce(0, { $0 + $1.amount})
+        let sumIncome =  transactions.filter({ $0.type == .income &&  $0.amount > filterMinimum }).reduce(0, { $0 + $1.amount})
+        let total = sumIncome - sumExpenses
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.maximumFractionDigits = 2
+        return numberFormatter.string(from: total as NSNumber) ?? "NOK 0.00"
+    }
+    
+    fileprivate func BalanceView() -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.green)
+            VStack(alignment: .leading, spacing: 8) {
+                
+                HStack {
+                    
+                    VStack(alignment: .leading) {
+                        
+                        Text("På Konto")
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundStyle(Color.black)
+                        Text("\(total)")
+                            .font(.system(size: 42, weight: .light))
+                            .foregroundStyle(Color.black)
+                    }
+                }
+                .padding(.top)
+                
+                HStack(spacing: 25) {
+                    VStack(alignment: .leading) {
+                        Text("Utgifter")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Color.black)
+                        Text("\(expenses)")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Color.black)
+                    }
+                    VStack(alignment: .leading) {
+                        Text("Intekter")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Color.black)
+                        Text("\(income)")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Color.black)
+                    }
+                    VStack(alignment: .leading) {
+                        Text("Poster")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Color.black)
+                        Text("\(transactions.count)")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Color.black)
+                    }
+                }
+                Spacer()
+            }
+        }
+        .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 5)
+        .frame(height: 150)
+        .padding(.horizontal)
+    
+    }
+    
 }
 
 #Preview {

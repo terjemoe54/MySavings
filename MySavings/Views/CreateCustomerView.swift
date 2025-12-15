@@ -12,6 +12,7 @@ struct CreateCustomerView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
     @Query(sort: \Customer.title, order: .forward) private var customers: [Customer]
+    @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @State private var title: String = ""
     @State private var customerToEdit: Customer?
     @State private var customerToDelete: Customer?
@@ -93,9 +94,11 @@ struct CreateCustomerView: View {
                     Button("Avslutt") {
                         dismiss()
                     }
+                    .buttonStyle(.borderedProminent)
                 }
             }
         }
+        .preferredColorScheme(darkModeEnabled ? .dark : .light)
       
     }
 }
