@@ -12,8 +12,6 @@ struct FirstView: View {
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @AppStorage("ShowName") private var showName = false
     @AppStorage("YourName") private var name: String = ""
-    @AppStorage("filterMinimum") var filterMinimum = 1.0
-    @AppStorage("showExpenses") var showExpenses = true
     @State private var showCreateCustomer = false
     @State private var showInvoiceList = false
     @State private var showingSettings = false
@@ -113,94 +111,10 @@ struct FirstView: View {
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
      }
    // Her begynner funcsjoner
+   
     
-    private var expenses: String {
-        let sumExpenses =  transactions.filter({ $0.type == .expense &&  $0.amount > filterMinimum }).reduce(0, { $0 + $1.amount})
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .currency
-        numberFormatter.maximumFractionDigits = 2
-        
-        return numberFormatter.string(from: sumExpenses as NSNumber) ?? "NOK 0.00"
-        
-    }
-    
-    private var income: String {
-        let sumIncome =  transactions.filter({ $0.type == .income &&  $0.amount > filterMinimum }).reduce(0, { $0 + $1.amount})
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .currency
-        numberFormatter.maximumFractionDigits = 2
-        guard !showExpenses else {
-            return "0.00"
-        }
-        return numberFormatter.string(from: sumIncome as NSNumber) ?? "NOK 0.00"
-        
-    }
-    
-    private var total: String {
-        let sumExpenses =  transactions.filter({ $0.type == .expense &&  $0.amount > filterMinimum }).reduce(0, { $0 + $1.amount})
-        let sumIncome =  transactions.filter({ $0.type == .income &&  $0.amount > filterMinimum }).reduce(0, { $0 + $1.amount})
-        let total = sumIncome - sumExpenses
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .currency
-        numberFormatter.maximumFractionDigits = 2
-        return numberFormatter.string(from: total as NSNumber) ?? "NOK 0.00"
-    }
-    
-    fileprivate func BalanceView() -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.green)
-            VStack(alignment: .leading, spacing: 8) {
-                
-                HStack {
-                    
-                    VStack(alignment: .leading) {
-                        
-                        Text("På Konto")
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundStyle(Color.black)
-                        Text("\(total)")
-                            .font(.system(size: 42, weight: .light))
-                            .foregroundStyle(Color.black)
-                    }
-                }
-                .padding(.top)
-                
-                HStack(spacing: 25) {
-                    VStack(alignment: .leading) {
-                        Text("Utgifter")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Color.black)
-                        Text("\(expenses)")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Color.black)
-                    }
-                    VStack(alignment: .leading) {
-                        Text("Intekter")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Color.black)
-                        Text("\(income)")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Color.black)
-                    }
-                    VStack(alignment: .leading) {
-                        Text("Poster")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Color.black)
-                        Text("\(transactions.count)")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Color.black)
-                    }
-                }
-                Spacer()
-            }
-        }
-        .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 5)
-        .frame(height: 150)
-        .padding(.horizontal)
-    
-    }
-    
+
+       
 }
 
 #Preview {

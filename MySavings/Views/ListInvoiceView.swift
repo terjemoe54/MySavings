@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct ListInvoiceView: View {
-    // Herfra
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("orderDescending") var orderDescending = false
@@ -17,25 +16,24 @@ struct ListInvoiceView: View {
     @AppStorage("fromDate") var fromDate = Date()
     @AppStorage("toDate") var toDate = Date()
     @AppStorage("sortPaid") var sortPaid = false
-    
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.colorScheme) var colorScheme
+    @Query var transactions: [Invoice]
+    @Query(sort: \Invoice.dueDate, order: .forward) private var invoices: [Invoice]
     @State private var showFilters = false
     @State private var showAddTransactionView = false
-    @Environment(\.colorScheme) var colorScheme
-    // Til Her
-    
-    @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Invoice.dueDate, order: .forward) private var invoices: [Invoice]
     @State private var showCreateCustomer = false
     @State private var showCreateInvoice = false
     @State private var invoiceToEdit: Invoice?
     @State private var showConfirmation: Bool = false
     @State private var invoiceToDelete: Invoice?
-    
+    let calendar = Calendar.current
+   
     var body: some View {
         NavigationStack {
             ZStack {
                 List {
-                    ForEach(invoices) { invoice in
+                    ForEach(displayTransactions) { invoice in
                         HStack {
                             VStack(alignment: .leading) {
                                 HStack {
@@ -55,7 +53,7 @@ struct ListInvoiceView: View {
                                         .font(.system(size: 15,weight: .bold))
                                     Spacer()
                                     Text("\(invoice.displayAmount)")
-                                        .font(.callout)
+                                        .font(.system(size: 15,weight: .bold))
                                 }
                                 .padding(.horizontal, 8)
                                 
@@ -199,6 +197,28 @@ struct ListInvoiceView: View {
             .padding(.bottom, 7)
         }
     }
+    
+    // Fra her
+   
+    
+    private var displayTransactions: [Invoice] {
+        let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { $0.paidDate > $1.paidDate }) : transactions.sorted(by: { $0.paidDate < $1.paidDate }) :  orderDescending ? transactions.sorted(by: { $0.dueDate > $1.dueDate }) : transactions.sorted(by: { $0.dueDate < $1.dueDate })
+        guard filterMinimum > 0 else {
+            return sortedTransactions
+             }
+        
+        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all)})
+        
+        let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
+
+        let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
+        
+        return filteredTransactions
+  
+    }
+    
+    
+    // Til Her
 }
 
 #Preview {
