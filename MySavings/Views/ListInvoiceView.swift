@@ -206,7 +206,7 @@ struct ListInvoiceView: View {
     
  // Filtering
         
-        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all)})
+        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && $0.customer?.title == "Brilleland"})
         
         let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
         
