@@ -26,93 +26,98 @@ struct UpdateInvoiceView: View {
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     
     var body: some View {
-        List {
-            Section("Faktura For") {
-                TextField("Navn", text: $title)
-                    .autocorrectionDisabled(true)
-                    .textInputAutocapitalization(.sentences)
+        
+        NavigationStack {
+            List {
+                Section("Faktura For") {
+                    TextField("Navn", text: $title)
+                        .autocorrectionDisabled(true)
+                        .textInputAutocapitalization(.sentences)
+                }
+                
+                Section {
+                    
+                    DatePicker("Forfallsdato",
+                               selection: $dueDate, displayedComponents: .date)
+                    DatePicker("Betalt dato",
+                               selection: $paidDate, displayedComponents: .date)
+                    HStack{
+                        Text("Beløp:")
+                        TextField("Beløp", value: $amount, formatter: numberFormatter)
+                            .keyboardType(.decimalPad)
+                    }
+                    
+                    // Picker for Expense / Income
+                    Picker("Velg Type", selection: $selectedType) {
+                        ForEach(TransactionType.allCases) { transactionType in
+                            Text(transactionType.title)
+                                .tag(transactionType)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal, 50)
+                    
+                    // Picker for Pending / Payed / Recieved / Taken
+                    Picker("Velg Type", selection: $selectedState) {
+                        ForEach(TransactionState.allCases) { transactionState in
+                            Text(transactionState.title)
+                                .tag(transactionState)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    HStack{
+                        Text("Intervall i måneder:")
+                        TextField("Intervall", value: $interval,formatter: intFormatter)
+                            .keyboardType(.decimalPad)
+                    }
+                    
+                    Picker("Velg en Kunde", selection: $invoice.customer){
+                        ForEach(customers) { customer in
+                            Text(customer.title)
+                                .tag(customer as Customer?)
+                        }
+                        .labelsHidden()
+                        .pickerStyle(.inline)
+                        Text("Ingen")
+                            .tag(nil as Customer?)
+                    }
+                }
             }
-            
-            Section {
-                
-                DatePicker("Forfallsdato",
-                           selection: $dueDate, displayedComponents: .date)
-                DatePicker("Betalt dato",
-                           selection: $paidDate, displayedComponents: .date)
-                HStack{
-                    Text("Beløp:")
-                    TextField("Beløp", value: $amount, formatter: numberFormatter)
-                        .keyboardType(.decimalPad)
-                }
-                
-                // Picker for Expense / Income
-                Picker("Velg Type", selection: $selectedType) {
-                    ForEach(TransactionType.allCases) { transactionType in
-                        Text(transactionType.title)
-                            .tag(transactionType)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal, 50)
-                
-                // Picker for Pending / Payed / Recieved / Taken
-                Picker("Velg Type", selection: $selectedState) {
-                    ForEach(TransactionState.allCases) { transactionState in
-                        Text(transactionState.title)
-                            .tag(transactionState)
-                    }
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                HStack{
-                    Text("Intervall i måneder:")
-                    TextField("Intervall", value: $interval,formatter: intFormatter)
-                        .keyboardType(.decimalPad)
-                }
-                
-                Picker("Velg en Kunde", selection: $invoice.customer){
-                    ForEach(customers) { customer in
-                        Text(customer.title)
-                            .tag(customer as Customer?)
-                    }
-                    .labelsHidden()
-                    .pickerStyle(.inline)
-                    Text("Ingen")
-                        .tag(nil as Customer?)
-                }
-            }
-            
-            Section {
-                HStack {
-                    Button("Oppdater") {
-                        updateInvoice()
-                        dismiss()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    Spacer()
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction){
                     Button("Avbryt") {
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)
                 }
+                ToolbarItem(placement: .topBarTrailing){
+                    Button("Oppdater") {
+                        updateInvoice()
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.borderedProminent)
+                    .disabled(title.isEmpty)
+                }
             }
+            .preferredColorScheme(darkModeEnabled ? .dark : .light)
+            .onAppear() {
+                // Laster inn verdier til variablene fra databasen når vi åpner listen
+                
+                selectedType = invoice.type
+                selectedState = invoice.state
+                
+                self.title = invoice.title
+                self.type = invoice.type
+                self.state = invoice.state
+                self.amount = invoice.amount
+                self.dueDate = invoice.dueDate
+                self.paidDate = invoice.paidDate
+                self.isPaid = invoice.isPaid
+                self.interval = invoice.interval
+            }
+            .navigationTitle("Oppdater Faktura")
         }
-        .preferredColorScheme(darkModeEnabled ? .dark : .light)
-        .onAppear() {
-            // Laster inn verdier til variablene fra databasen når vi åpner listen
-            
-            selectedType = invoice.type
-            selectedState = invoice.state
-            
-            self.title = invoice.title
-            self.type = invoice.type
-            self.state = invoice.state
-            self.amount = invoice.amount
-            self.dueDate = invoice.dueDate
-            self.paidDate = invoice.paidDate
-            self.isPaid = invoice.isPaid
-            self.interval = invoice.interval
-        }
-        .navigationTitle("Oppdater Faktura")
         
     }
     func updateInvoice() {

@@ -35,7 +35,7 @@ struct BalanceView: View {
                     }
                 }
                 .padding(.top)
-
+                
                 HStack(spacing: 25) {
                     VStack(alignment: .leading) {
                         Text("Utgifter")
@@ -67,27 +67,27 @@ struct BalanceView: View {
         }
         .shadow(color: Color.black.opacity(0.3), radius: 10, x: 0, y: 5)
         .frame(height: 150)
-        .padding(.horizontal)
+        .padding(.horizontal,7)
     }
     
     private var displayTransactions: [Invoice] {
-        let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { $0.paidDate > $1.paidDate }) : transactions.sorted(by: { $0.paidDate < $1.paidDate }) :  orderDescending ? transactions.sorted(by: { $0.dueDate > $1.dueDate }) : transactions.sorted(by: { $0.dueDate < $1.dueDate })
+        let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) > calendar.startOfDay(for: $1.paidDate) }) : transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) < calendar.startOfDay(for: $1.paidDate) }) :  orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) > calendar.startOfDay(for: $1.dueDate) }) : transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) < calendar.startOfDay(for: $1.dueDate) })
         guard filterMinimum > 0 else {
             return sortedTransactions
-             }
+        }
         
         let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all)})
         
         let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
-
+        
         let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
         
         return filteredTransactions
-  
+        
     }
     
     
-
+    
     private var expenses: String {
         let sumExpenses = displayTransactions
             .filter { $0.type == .expense && $0.amount > filterMinimum }
@@ -95,9 +95,10 @@ struct BalanceView: View {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
         numberFormatter.maximumFractionDigits = 2
+       
         return numberFormatter.string(from: sumExpenses as NSNumber) ?? "NOK 0.00"
     }
-
+    
     private var income: String {
         let sumIncome = displayTransactions
             .filter { $0.type == .income && $0.amount > filterMinimum }
@@ -105,12 +106,10 @@ struct BalanceView: View {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
         numberFormatter.maximumFractionDigits = 2
-        guard !showExpenses else {
-            return "0.00"
-        }
+       
         return numberFormatter.string(from: sumIncome as NSNumber) ?? "NOK 0.00"
     }
-
+    
     private var total: String {
         let sumExpenses = displayTransactions
             .filter { $0.type == .expense && $0.amount > filterMinimum }

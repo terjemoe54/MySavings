@@ -41,7 +41,7 @@ struct CreateInvoiceView: View {
                     }
                     DatePicker("Forfallsdato:", selection: $dueDate, displayedComponents: .date)
                     DatePicker("Belalt Dato:", selection: $paidDate, displayedComponents: .date)
-    
+                    
                     // Picker for Expense / Income
                     Picker("Velg Type", selection: $selectedType) {
                         ForEach(TransactionType.allCases) { transactionType in
@@ -87,7 +87,7 @@ struct CreateInvoiceView: View {
                         dismiss()
                     }
                 }
-                ToolbarItem(placement: .bottomBar){
+                ToolbarItem(placement: .topBarTrailing){
                     Button("Opprett"){
                         save()
                         dismiss()

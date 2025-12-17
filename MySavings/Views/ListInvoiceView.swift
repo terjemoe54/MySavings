@@ -28,7 +28,7 @@ struct ListInvoiceView: View {
     @State private var showConfirmation: Bool = false
     @State private var invoiceToDelete: Invoice?
     let calendar = Calendar.current
-   
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -61,7 +61,6 @@ struct ListInvoiceView: View {
                                     Image(systemName: invoice.type == .income ? "arrow.up.forward" : "arrow.down.forward")
                                         .font(.system(size: 16, weight: .bold ))
                                         .foregroundStyle(invoice.type == .income ? Color.green : Color.red)
-                                    
                                     HStack{
                                         if let customer = invoice.customer {
                                             Text(customer.title)
@@ -127,9 +126,9 @@ struct ListInvoiceView: View {
                 message: { item in
                     Text("Er du sikker på at du vil slette \(item.title)?")
                 })
-            .sheet(item: $invoiceToEdit,
+               .sheet(item: $invoiceToEdit,
                    onDismiss: {
-                invoiceToEdit = nil
+                   invoiceToEdit = nil
             },
                    content: { editInvoice in
                 NavigationStack {
@@ -162,25 +161,24 @@ struct ListInvoiceView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                    showFilters = true
+                        showFilters = true
                     } label: {
                         HStack {
                             Text("Filtere")
                             Image(systemName: "engine.emission.and.filter")
                                 .foregroundStyle(darkModeEnabled ? Color.white : Color.black)
                         }
-                        
-                        }
+                    }
                     .buttonStyle(.borderedProminent)
                 }
             }
             .sheet(isPresented: $showFilters) {
                 FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
-          }
+            }
         }
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }
-  
+    
     fileprivate func FloatingButton() -> some View {
         VStack {
             Spacer()
@@ -197,29 +195,27 @@ struct ListInvoiceView: View {
             .padding(.bottom, 7)
         }
     }
-    
-    // Fra her
-   
+
+  // Sorting
     
     private var displayTransactions: [Invoice] {
         let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { $0.paidDate > $1.paidDate }) : transactions.sorted(by: { $0.paidDate < $1.paidDate }) :  orderDescending ? transactions.sorted(by: { $0.dueDate > $1.dueDate }) : transactions.sorted(by: { $0.dueDate < $1.dueDate })
         guard filterMinimum > 0 else {
             return sortedTransactions
-             }
+        }
+    
+ // Filtering
         
         let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all)})
         
         let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
-
+        
         let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
         
         return filteredTransactions
-  
+        
     }
-    
-    
-    // Til Her
-}
+ }
 
 #Preview {
     ListInvoiceView()

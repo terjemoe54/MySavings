@@ -10,13 +10,19 @@ import SwiftData
 
 struct FirstView: View {
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
+    @AppStorage("filterMinimum") var filterMinimum = 1.0
+    @AppStorage("orderDescending") var orderDescending = false
+    @AppStorage("showExpenses") var showExpenses = true
+    @AppStorage("fromDate") var fromDate = Date()
+    @AppStorage("toDate") var toDate = Date()
+    @AppStorage("sortPaid") var sortPaid = false
     @AppStorage("ShowName") private var showName = false
     @AppStorage("YourName") private var name: String = ""
     @State private var showCreateCustomer = false
     @State private var showInvoiceList = false
     @State private var showingSettings = false
+    @State private var showFilters = false
     @Environment(\.colorScheme) var colorScheme
-    
     @Environment(\.modelContext) private var context
     @Query var transactions: [Invoice]
     let calendar = Calendar.current
@@ -24,11 +30,10 @@ struct FirstView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                
                 Color(Color.cyan)
                     .ignoresSafeArea()
                     .opacity(0.1)
-               
+                
                 Image("CityView")
                     .resizable()
                     .scaledToFit()
@@ -36,15 +41,13 @@ struct FirstView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    
                     Text(showName ? name : "")
                         .font(.largeTitle)
                         .bold()
                         .foregroundStyle(Color.blue)
-                BalanceView()
+                    BalanceView()
                     Spacer()
-                    
-                 HStack {
+                    HStack {
                         Spacer()
                         VStack {
                             Button {
@@ -61,7 +64,7 @@ struct FirstView: View {
                                 .foregroundColor(.black)
                         }
                         .padding(.horizontal)
-                     VStack {
+                        VStack {
                             Button {
                                 showInvoiceList.toggle()
                             } label: {
@@ -75,20 +78,37 @@ struct FirstView: View {
                                 .opacity(0.3)
                                 .foregroundColor(.black)
                         }
-                       .padding(.horizontal)
+                        .padding(.horizontal)
                         Spacer()
                     }
                 }
             }
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showFilters = true
+                    } label: {
+                        HStack {
+                            Text("Filtere")
+                            Image(systemName: "engine.emission.and.filter")
+                                .foregroundStyle(darkModeEnabled ? Color.white : Color.black)
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+            .sheet(isPresented: $showFilters) {
+                FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
+            }
+            .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                    showingSettings = true
+                        showingSettings = true
                     } label: {
                         Image(systemName: "gearshape.fill")
                             .background(.white)
                             .foregroundStyle(Color.black)
-                   }
+                    }
                 }
             }
             .sheet(isPresented: $showCreateCustomer,
@@ -103,18 +123,12 @@ struct FirstView: View {
                     ListInvoiceView()
                 }
             })
-            
             .sheet(isPresented: $showingSettings) {
-            SettingsView(name: $name, darkModeEnabled: $darkModeEnabled, showName: $showName)
+                SettingsView(name: $name, darkModeEnabled: $darkModeEnabled, showName: $showName)
             }
         }
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
-     }
-   // Her begynner funcsjoner
-   
-    
-
-       
+    }
 }
 
 #Preview {
