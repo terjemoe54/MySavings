@@ -22,7 +22,9 @@ struct FiltersView: View {
     var body: some View {
         NavigationView {
             Form {
-                  Text("Kunde: \(selectedCustomer?.title)")
+                let myCustomer = selectedCustomer?.title ?? ""
+                  Text("Kunde: \(myCustomer)")
+                
                 Section(header: Text("Sortering / Filter"),
                         footer: Text("")) {
                    
