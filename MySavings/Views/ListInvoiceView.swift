@@ -1,7 +1,7 @@
 //
 //  ContentView.swift
 //  ToDos
-//
+//  dette er for nå
 //  Created by Tunde Adegoroye on 06/06/2023.
 // bra
 
