@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FiltersView: View {
+    @Query private var customers: [Customer]
     @Binding var filterMinimum: Double
     @Binding var orderDescending: Bool
     @Binding var showExpenses: Bool
@@ -15,13 +17,27 @@ struct FiltersView: View {
     @Binding var toDate: Date
     @Binding var sortPaid: Bool
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
-   
+    @State private var selectedCustomer: Customer?
+    
     var body: some View {
         NavigationView {
             Form {
-            
+                  Text("Kunde: \(selectedCustomer?.title)")
                 Section(header: Text("Sortering / Filter"),
                         footer: Text("")) {
+                   
+                    Picker("Velg en Kunde", selection: $selectedCustomer){
+                        ForEach(customers.sorted { $0.title < $1.title }) { customer in
+                            Text(customer.title)
+                                .tag(customer as Customer?)
+                        }
+                        .labelsHidden()
+                        .pickerStyle(.inline)
+                        Text("Ingen")
+                            .tag(nil as Customer?)
+                    }
+                    
+                    
                     Toggle(isOn: $orderDescending) {
                         Text(!orderDescending ? "Dato (Elste først)" :"Dato (Nyeste først)")
                     }
