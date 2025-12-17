@@ -199,7 +199,7 @@ struct ListInvoiceView: View {
   // Sorting
     
     private var displayTransactions: [Invoice] {
-        let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { $0.paidDate > $1.paidDate }) : transactions.sorted(by: { $0.paidDate < $1.paidDate }) :  orderDescending ? transactions.sorted(by: { $0.dueDate > $1.dueDate }) : transactions.sorted(by: { $0.dueDate < $1.dueDate })
+        let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) > calendar.startOfDay(for: $1.paidDate)}) : transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) < calendar.startOfDay(for: $1.paidDate)}) :  orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) > calendar.startOfDay(for: $1.dueDate)}) : transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) < calendar.startOfDay(for: $1.dueDate) })
         guard filterMinimum > 0 else {
             return sortedTransactions
         }
