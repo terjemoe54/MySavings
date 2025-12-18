@@ -27,18 +27,6 @@ struct FiltersView: View {
                 
                 Section(header: Text("Sortering / Filter"),
                         footer: Text("")) {
-                   
-                    Picker("Velg en Kunde", selection: $selectedCustomer){
-                        ForEach(customers.sorted { $0.title < $1.title }) { customer in
-                            Text(customer.title)
-                                .tag(customer as Customer?)
-                        }
-                        .labelsHidden()
-                        .pickerStyle(.inline)
-                        Text("Ingen")
-                            .tag(nil as Customer?)
-                    }
-                    
                     
                     Toggle(isOn: $orderDescending) {
                         Text(!orderDescending ? "Dato (Elste først)" :"Dato (Nyeste først)")

@@ -27,11 +27,33 @@ struct ListInvoiceView: View {
     @State private var invoiceToEdit: Invoice?
     @State private var showConfirmation: Bool = false
     @State private var invoiceToDelete: Invoice?
+    @State private var showFilteredCustomer: Bool = false
     let calendar = Calendar.current
+    @State private var selectedCustomer: Customer?
+    @Query private var customers: [Customer]
     
     var body: some View {
+        
         NavigationStack {
-            ZStack {
+            Section {
+                Toggle(isOn: $showFilteredCustomer) {
+                    Text("Filter")
+                }
+                Picker("Velg en Kunde", selection: $selectedCustomer){
+                    ForEach(customers.sorted { $0.title < $1.title }) { customer in
+                        Text(customer.title)
+                            .tag(customer as Customer?)
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.inline)
+                    Text("Kunder")
+                        .tag(nil as Customer?)
+                }.disabled(!showFilteredCustomer)
+            
+            }.frame(width: 200,height: 20,  alignment: .center)
+            
+            
+             ZStack {
                 List {
                     ForEach(displayTransactions) { invoice in
                         HStack {
@@ -205,14 +227,24 @@ struct ListInvoiceView: View {
         }
     
  // Filtering
+        let myCustomer = selectedCustomer?.title ?? ""
         
-        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && $0.customer?.title == "Brilleland"})
-        
-        let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
-        
-        let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
-        
-        return filteredTransactions
+        if showFilteredCustomer {
+            let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all)  &&  $0.customer?.title == myCustomer })
+            
+            let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
+            
+            let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
+            
+            return filteredTransactions
+        } else {
+            let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all)})
+            let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
+            
+            let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
+            
+            return filteredTransactions
+        }
         
     }
  }
