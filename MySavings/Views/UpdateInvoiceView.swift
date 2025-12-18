@@ -97,7 +97,8 @@ struct UpdateInvoiceView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .buttonStyle(.borderedProminent)
-                    .disabled(title.isEmpty)
+                    .disabled(changed)
+                    //.disabled(title.isEmpty)
                 }
             }
             .preferredColorScheme(darkModeEnabled ? .dark : .light)
@@ -131,6 +132,19 @@ struct UpdateInvoiceView: View {
         invoice.isPaid = isPaid
         invoice.interval = interval
     }
+    
+    var changed: Bool {
+          invoice.title == title
+//      ||  invoice.type == selectedType
+//      ||  invoice.state == selectedState
+//      ||  invoice.amount == amount
+//      ||  invoice.dueDate == dueDate
+//      ||  invoice.paidDate == paidDate
+//      ||  invoice.customer?.title == title
+//      ||  invoice.interval == interval
+//
+    }
+    
 }
 
 #Preview {

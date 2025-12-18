@@ -106,9 +106,9 @@ struct FirstView: View {
                         showingSettings = true
                     } label: {
                         Image(systemName: "gearshape.fill")
-                            .background(.white)
-                            .foregroundStyle(Color.black)
-                    }
+                            .font(Font.system(size: 25, weight: .black))
+                            .background(.clear)
+                   }
                 }
             }
             .sheet(isPresented: $showCreateCustomer,

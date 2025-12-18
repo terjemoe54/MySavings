@@ -26,9 +26,18 @@ struct UpdateCustomerView: View {
             }
             
             Section {
-                Button("Oppdater") {
-                    customer.title = title
-                    dismiss()
+                HStack {
+                    Button("Oppdater") {
+                        customer.title = title
+                        dismiss()
+                    }
+                    .disabled(customer.title == title)
+                    .buttonStyle(.borderedProminent)
+                    Spacer()
+                    Button("Avbryt") {
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
             }
         }
