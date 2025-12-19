@@ -36,6 +36,12 @@ struct ListInvoiceView: View {
         
         NavigationStack {
             Section {
+                Text("Sum : \(total)")
+                    .font(.system(size: 16,weight: .black))
+                    .background(.blue)
+                    .opacity(0.4)
+                    .clipShape(.capsule)
+                    
                 Toggle(isOn: $showFilteredCustomer) {
                     Text("Filter")
                 }
@@ -201,6 +207,20 @@ struct ListInvoiceView: View {
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }
     
+  private var total: String {
+        let sumExpenses = displayTransactions
+            .filter { $0.type == .expense && $0.amount > filterMinimum }
+            .reduce(0, { $0 + $1.amount })
+        let sumIncome = displayTransactions
+            .filter { $0.type == .income && $0.amount > filterMinimum }
+            .reduce(0, { $0 + $1.amount })
+        let total = sumIncome - sumExpenses
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.maximumFractionDigits = 2
+        return numberFormatter.string(from: total as NSNumber) ?? "NOK 0.00"
+    }
+    
     fileprivate func FloatingButton() -> some View {
         VStack {
             Spacer()
@@ -245,6 +265,8 @@ struct ListInvoiceView: View {
             
             return filteredTransactions
         }
+        
+       
         
     }
  }
