@@ -134,17 +134,17 @@ struct UpdateInvoiceView: View {
     }
     
     var changed: Bool {
-          invoice.title == title
-//      ||  invoice.type == selectedType
-//      ||  invoice.state == selectedState
-//      ||  invoice.amount == amount
-//      ||  invoice.dueDate == dueDate
-//      ||  invoice.paidDate == paidDate
-//      ||  invoice.customer?.title == title
-//      ||  invoice.interval == interval
-//
-    }
-    
+        invoice.type.title == selectedType.title
+     && invoice.state.title == selectedState.title
+
+     && invoice.title == title
+     && invoice.amount == amount
+     && invoice.dueDate == dueDate
+     && invoice.paidDate == paidDate
+
+     && invoice.interval == interval
+     && !invoice.customer!.hasChanges
+   }
 }
 
 #Preview {
