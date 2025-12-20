@@ -24,21 +24,24 @@ struct UpdateCustomerView: View {
                     .autocorrectionDisabled(true)
                     .textInputAutocapitalization(.sentences)
             }
-            
-            Section {
-                HStack {
-                    Button("Oppdater") {
-                        customer.title = title
-                        dismiss()
-                    }
-                    .disabled(customer.title == title)
-                    .buttonStyle(.borderedProminent)
-                    Spacer()
-                    Button("Avbryt") {
-                        dismiss()
-                    }
-                    .buttonStyle(.borderedProminent)
+            Image("BusinessMan")
+            .resizable()
+                .scaledToFit()
+           }
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction){
+                Button("Avbryt") {
+                    dismiss()
                 }
+                .buttonStyle(.borderedProminent)
+            }
+            ToolbarItem(placement: .topBarTrailing){
+                Button("Oppdater") {
+                    customer.title = title
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(customer.title == title)
             }
         }
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
@@ -47,5 +50,5 @@ struct UpdateCustomerView: View {
             self.title = customer.title
         }
         .navigationTitle("Oppdater Kunder")
-    }
+     }
 }

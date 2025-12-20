@@ -147,7 +147,7 @@ struct UpdateInvoiceView: View {
    }
 }
 
-#Preview {
-    UpdateInvoiceView(invoice: Invoice())
-        .modelContainer(for: Invoice.self)
-}
+//#Preview {
+//    UpdateInvoiceView(invoice: Invoice())
+//        .modelContainer(for: Invoice.self)
+//}

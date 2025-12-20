@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct FiltersView: View {
+    @Environment(\.dismiss) var dismiss
     @Query private var customers: [Customer]
     @Binding var filterMinimum: Double
     @Binding var orderDescending: Bool
@@ -61,6 +62,14 @@ struct FiltersView: View {
                     }
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction){
+                    Button("Avslutt") {
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+           }
             .foregroundStyle(darkModeEnabled ? Color.white : Color.black)
             .font(.system(size: 16, weight: .semibold))
             .navigationTitle("Filter")

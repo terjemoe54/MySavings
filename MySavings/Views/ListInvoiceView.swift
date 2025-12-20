@@ -18,6 +18,7 @@ struct ListInvoiceView: View {
     @AppStorage("sortPaid") var sortPaid = false
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) var dismiss
     @Query var transactions: [Invoice]
     @Query(sort: \Invoice.dueDate, order: .forward) private var invoices: [Invoice]
     @State private var showFilters = false
@@ -57,9 +58,8 @@ struct ListInvoiceView: View {
                 }.disabled(!showFilteredCustomer)
             
             }.frame(width: 200,height: 20,  alignment: .center)
-            
-            
-             ZStack {
+         
+            ZStack {
                 List {
                     ForEach(displayTransactions) { invoice in
                         HStack {
@@ -129,6 +129,7 @@ struct ListInvoiceView: View {
                         }
                     }
                 }
+               
                 FloatingButton()
             }
             .confirmationDialog(
@@ -178,14 +179,24 @@ struct ListInvoiceView: View {
             })
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Kunder \(Image(systemName: "person.2.fill"))") {
-                        showCreateCustomer.toggle()
+                    Button("Avbryt \(Image(systemName: "arrowshape.turn.up.backward.2.fill"))") {
+                        dismiss()
                     }
                     .buttonStyle(.borderedProminent)
                     .font(.system(size: 15, weight: .bold))
                     .padding(8)
                 }
             }
+//            .toolbar {
+//                ToolbarItem(placement: .topBarLeading) {
+//                    Button("Kunder \(Image(systemName: "person.2.fill"))") {
+//                        showCreateCustomer.toggle()
+//                    }
+//                    .buttonStyle(.borderedProminent)
+//                    .font(.system(size: 15, weight: .bold))
+//                    .padding(8)
+//                }
+//            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

@@ -34,19 +34,21 @@ struct FirstView: View {
                     .ignoresSafeArea()
                     .opacity(0.1)
                 
-                Image("CityView")
+                Image("CityViewC")
                     .resizable()
-                    .scaledToFit()
-                    .opacity(0.6)
+                    .scaledToFill()
+                    .opacity(0.8)
                     .ignoresSafeArea()
                 
                 VStack {
-                    Text(showName ? name : "")
+                    Text(showName ? name : "Terje Moe")
                         .font(.largeTitle)
                         .bold()
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Color.white)
+                       Spacer()
                     BalanceView()
-                    Spacer()
+                        .padding()
+                       //   Spacer()
                     HStack {
                         Spacer()
                         VStack {
@@ -60,8 +62,8 @@ struct FirstView: View {
                             .buttonStyle(.borderedProminent)
                             Text("Kunder")
                                 .font(.system(size: 25, weight: .black))
-                                .opacity(0.3)
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
+                                .opacity(0.8)
                         }
                         .padding(.horizontal)
                         VStack {
@@ -75,8 +77,8 @@ struct FirstView: View {
                             .buttonStyle(.borderedProminent)
                             Text("Fakturaer")
                                 .font(.system(size: 25, weight: .black))
-                                .opacity(0.3)
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
+                                .opacity(0.8)
                         }
                         .padding(.horizontal)
                         Spacer()

@@ -19,8 +19,15 @@ struct CreateCustomerView: View {
     @State private var showConfirmation: Bool = false
     
     var body: some View {
+       
         NavigationView {
+            
             List {
+                Image(systemName: "person.3.fill")
+                    .background(.white)
+                    .foregroundStyle(.blue)
+                    .font(Font.largeTitle.bold())
+                    .clipShape(.capsule)
                 Section("Kunde: ") {
                     TextField("Kunde Navn", text: $title)
                         .autocorrectionDisabled(true)
@@ -37,7 +44,7 @@ struct CreateCustomerView: View {
                     .buttonStyle(.borderedProminent)
                     .disabled(title.isEmpty)
                 }
-                
+               
                 Section("Kunder") {
                     ForEach(customers) { customer in
                         Text(customer.title)
@@ -91,7 +98,7 @@ struct CreateCustomerView: View {
             })
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Avslutt") {
+                    Button("Avbryt") {
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)

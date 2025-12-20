@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.dismiss) var dismiss
     @Binding var name: String
     @Binding var darkModeEnabled: Bool
     @Binding var showName: Bool
@@ -46,12 +47,22 @@ struct SettingsView: View {
                     }
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction){
+                    Button("Avslutt") {
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+           }
             .foregroundStyle(darkModeEnabled ? Color.white : Color.black)
             .font(.system(size: 16, weight: .semibold))
             .navigationTitle("Instillinger")
         }
+        
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }
+    
 }
 
 #Preview {
