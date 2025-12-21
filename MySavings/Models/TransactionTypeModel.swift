@@ -14,18 +14,18 @@ enum TransactionState: String, CaseIterable, Identifiable, Codable {
     
     var title: String {
         switch self {
-        case .paid: return "Mottatt"
+        case .paid: return "Betalt"
         case .pending: return "Venter"
-        case .resieved: return "Betalt"
+        case .resieved: return "Mottatt"
         case .taken: return "Trukket"
         }
     }
     
     var color: Color {
         switch self {
-        case .paid: return .blue
+        case .paid: return .green
         case .pending: return .yellow
-        case .resieved: return .green
+        case .resieved: return .blue
         case .taken: return .red
         }
     }
@@ -39,7 +39,7 @@ enum TransactionType: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .income: return "Intekt"
         case .expense: return "Utgift"
-        case .all: return "Alle"
+        case .all: return "Annet"
         }
     }
     
