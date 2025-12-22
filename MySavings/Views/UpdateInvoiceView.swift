@@ -49,7 +49,7 @@ struct UpdateInvoiceView: View {
                     
                     // Picker for Expense / Income
                     Picker("Velg Type", selection: $selectedType) {
-                        ForEach(TransactionType.allCases) { transactionType in
+                        ForEach(TransactionType.allCases.dropLast()) { transactionType in
                             Text(transactionType.title)
                                 .tag(transactionType)
                         }
@@ -59,7 +59,7 @@ struct UpdateInvoiceView: View {
                     
                     // Picker for Pending / Payed / Recieved / Taken
                     Picker("Velg Type", selection: $selectedState) {
-                        ForEach(TransactionState.allCases) { transactionState in
+                        ForEach(TransactionState.allCases.dropLast()) { transactionState in
                             Text(transactionState.title)
                                 .tag(transactionState)
                         }

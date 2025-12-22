@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 enum TransactionState: String, CaseIterable, Identifiable, Codable {
-    case   resieved, pending, paid, taken
+    case   resieved, pending, paid, taken, all
     var id: Self { self }
     
     var title: String {
@@ -18,6 +18,8 @@ enum TransactionState: String, CaseIterable, Identifiable, Codable {
         case .pending: return "Venter"
         case .resieved: return "Mottatt"
         case .taken: return "Trukket"
+        case .all: return "Alle"
+            
         }
     }
     
@@ -27,6 +29,8 @@ enum TransactionState: String, CaseIterable, Identifiable, Codable {
         case .pending: return .yellow
         case .resieved: return .blue
         case .taken: return .red
+        case .all: return .black
+            
         }
     }
 }
