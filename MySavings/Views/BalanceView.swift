@@ -12,8 +12,9 @@ import SwiftData
 struct BalanceView: View {
     @Query var transactions: [Invoice]
     private let calendar = Calendar.current
-    @AppStorage("filterMinimum") private var filterMinimum = 1.0
-    @AppStorage("showExpenses") private var showExpenses = true
+    @AppStorage("filterMinimum") var filterMinimum = 1.0
+    @AppStorage("showUnpaid") var showUnpaid = true
+    @AppStorage("showExpenses") var showExpenses = true
     @AppStorage("orderDescending") var orderDescending = false
     @AppStorage("sortPaid") var sortPaid = false
     @AppStorage("fromDate") var fromDate = Date()
@@ -76,7 +77,7 @@ struct BalanceView: View {
             return sortedTransactions
         }
         
-        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all)})
+        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)})
         
         let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
         
