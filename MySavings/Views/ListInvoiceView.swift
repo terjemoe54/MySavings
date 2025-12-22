@@ -12,6 +12,7 @@ struct ListInvoiceView: View {
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("orderDescending") var orderDescending = false
+    @AppStorage("showUnpaid") var showUnpaid = true
     @AppStorage("showExpenses") var showExpenses = true
     @AppStorage("fromDate") var fromDate = Date()
     @AppStorage("toDate") var toDate = Date()
@@ -187,16 +188,7 @@ struct ListInvoiceView: View {
                     .padding(8)
                 }
             }
-//            .toolbar {
-//                ToolbarItem(placement: .topBarLeading) {
-//                    Button("Kunder \(Image(systemName: "person.2.fill"))") {
-//                        showCreateCustomer.toggle()
-//                    }
-//                    .buttonStyle(.borderedProminent)
-//                    .font(.system(size: 15, weight: .bold))
-//                    .padding(8)
-//                }
-//            }
+
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -212,7 +204,7 @@ struct ListInvoiceView: View {
                 }
             }
             .sheet(isPresented: $showFilters) {
-                FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
+                FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending,showUnpaid: $showUnpaid, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid)
             }
         }
         .preferredColorScheme(darkModeEnabled ? .dark : .light)

@@ -13,6 +13,7 @@ struct FiltersView: View {
     @Query private var customers: [Customer]
     @Binding var filterMinimum: Double
     @Binding var orderDescending: Bool
+    @Binding var showUnpaid: Bool
     @Binding var showExpenses: Bool
     @Binding var fromDate: Date
     @Binding var toDate: Date
@@ -33,6 +34,10 @@ struct FiltersView: View {
                         Text(!orderDescending ? "Dato (Elste først)" :"Dato (Nyeste først)")
                     }
                     VStack {
+                        Toggle(isOn: $showUnpaid) {
+                            Text("Vis Bare Ubetalte")
+                        }.padding(.vertical)
+                        
                        Toggle(isOn: $showExpenses) {
                             Text("Vis Bare Utgifter")
                         }
@@ -79,7 +84,7 @@ struct FiltersView: View {
 }
 
 #Preview {
-    FiltersView(filterMinimum: .constant(0.0), orderDescending: .constant(false), showExpenses: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false))
+    FiltersView(filterMinimum: .constant(0.0), orderDescending: .constant(false),showUnpaid: .constant(false), showExpenses: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false))
 }
 
 
