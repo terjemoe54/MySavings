@@ -88,7 +88,7 @@ struct FiltersView: View {
 }
 
 #Preview {
-    FiltersView(filterMinimum: .constant(0.0), orderDescending: .constant(false),showUnpaid: .constant(false), showExpenses: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false))
+    FiltersView(filterMinimum: .constant(1.0), orderDescending: .constant(false),showUnpaid: .constant(false), showExpenses: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false))
 }
 
 

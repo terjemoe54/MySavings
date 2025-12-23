@@ -97,7 +97,7 @@ struct UpdateInvoiceView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .buttonStyle(.borderedProminent)
-                    .disabled(changed)
+                    .disabled(changed || amount < 1)
                     //.disabled(title.isEmpty)
                 }
             }
@@ -123,6 +123,15 @@ struct UpdateInvoiceView: View {
     }
     func updateInvoice() {
         // setter verdiene fra variablene til databasen
+  
+        if selectedType == .income && (selectedState == .paid || selectedState == .taken) {
+            selectedState = .resieved
+        }
+   
+        if selectedType == .expense && selectedState == .resieved {
+            selectedState = .paid
+        }
+    
         invoice.title = title
         invoice.type = selectedType
         invoice.state = selectedState

@@ -93,7 +93,7 @@ struct CreateInvoiceView: View {
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)
-                    .disabled(title.isEmpty)
+                    .disabled(title.isEmpty || amount < 1)
                 }
             }
         }
@@ -111,6 +111,13 @@ extension CreateInvoiceView {
     
     func save() {
         // Lagrer verdiene til databasen og oppdaterer relasjon
+        if selectedType == .income && (selectedState == .paid || selectedState == .taken) {
+            selectedState = .resieved
+        }
+   
+        if selectedType == .expense && selectedState == .resieved {
+            selectedState = .paid
+        }
         invoice.title = title
         invoice.type = selectedType
         invoice.state = selectedState
