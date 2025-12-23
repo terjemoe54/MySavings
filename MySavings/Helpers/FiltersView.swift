@@ -24,28 +24,32 @@ struct FiltersView: View {
     var body: some View {
         NavigationView {
             Form {
-                let myCustomer = selectedCustomer?.title ?? ""
-                  Text("Kunde: \(myCustomer)")
-                
-                Section(header: Text("Sortering / Filter"),
-                        footer: Text("")) {
-                    
+                Section(header: Text("Sortering / Filter")
+                    .font(.system(size: 20, weight: .semibold))){
                     Toggle(isOn: $orderDescending) {
                         Text(!orderDescending ? "Dato (Elste først)" :"Dato (Nyeste først)")
                     }
-                    VStack {
-                        Toggle(isOn: $showUnpaid) {
-                            Text("Vis Bare Ubetalte")
-                        }.padding(.vertical)
-                        
-                       Toggle(isOn: $showExpenses) {
-                            Text("Vis Bare Utgifter")
-                        }
-                        HStack {
-                            Text("Minimumsbeløp:")
-                            TextField("Beløp :", value: $filterMinimum, formatter: NumberFormatter())
-                        }
-                        Toggle(isOn: $sortPaid) {
+                    
+                    Toggle(isOn: $showUnpaid) {
+                        Text("Vis Bare Ubetalte")
+                    }.padding(.vertical)
+                    
+                    Toggle(isOn: $showExpenses) {
+                        Text("Vis Bare Utgifter")
+                    }
+                }
+                
+                Section(header: Text("Beløp")
+                    .font(.system(size: 20, weight: .semibold))){
+                    HStack {
+                        Text("Minimumsbeløp:")
+                        TextField("Beløp :", value: $filterMinimum, formatter: NumberFormatter())
+                    }
+                }
+                
+                Section(header: Text("Intervall")
+                    .font(.system(size: 20, weight: .semibold))){
+                Toggle(isOn: $sortPaid) {
                             Text(!sortPaid ? "Forfalls-Dato" : "Betalt-Dato")
                          }
                         HStack{
@@ -56,17 +60,17 @@ struct FiltersView: View {
                                            displayedComponents: .date)
                                 .padding(.trailing)
                             }
-                       VStack (alignment: .center) {
+                            VStack (alignment: .center) {
                                 Text("Til Dato")
                                     .padding(.leading)
-                                  DatePicker("", selection: $toDate,
+                                DatePicker("", selection: $toDate,
                                            displayedComponents: .date)
                                 .padding(.trailing)
                             }
                         }
                     }
                 }
-            }
+           
             .toolbar {
                 ToolbarItem(placement: .cancellationAction){
                     Button("Avslutt") {

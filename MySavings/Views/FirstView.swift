@@ -42,7 +42,7 @@ struct FirstView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    Text(showName ? name : "Terje Moe")
+                    Text(showName ? name : "")
                         .font(.largeTitle)
                         .bold()
                         .foregroundStyle(Color.white)
