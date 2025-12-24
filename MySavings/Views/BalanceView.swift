@@ -77,7 +77,7 @@ struct BalanceView: View {
             return sortedTransactions
         }
         
-        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)})
+        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount >= filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)})
         
         let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
         
@@ -91,7 +91,7 @@ struct BalanceView: View {
     
     private var expenses: String {
         let sumExpenses = displayTransactions
-            .filter { $0.type == .expense && $0.amount > filterMinimum }
+            .filter { $0.type == .expense && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
@@ -102,7 +102,7 @@ struct BalanceView: View {
     
     private var income: String {
         let sumIncome = displayTransactions
-            .filter { $0.type == .income && $0.amount > filterMinimum }
+            .filter { $0.type == .income && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
@@ -113,10 +113,10 @@ struct BalanceView: View {
     
     private var total: String {
         let sumExpenses = displayTransactions
-            .filter { $0.type == .expense && $0.amount > filterMinimum }
+            .filter { $0.type == .expense && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let sumIncome = displayTransactions
-            .filter { $0.type == .income && $0.amount > filterMinimum }
+            .filter { $0.type == .income && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let total = sumIncome - sumExpenses
         let numberFormatter = NumberFormatter()

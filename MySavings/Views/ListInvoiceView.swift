@@ -212,10 +212,10 @@ struct ListInvoiceView: View {
     
   private var total: String {
         let sumExpenses = displayTransactions
-            .filter { $0.type == .expense && $0.amount > filterMinimum }
+            .filter { $0.type == .expense && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let sumIncome = displayTransactions
-            .filter { $0.type == .income && $0.amount > filterMinimum }
+            .filter { $0.type == .income && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let total = sumIncome - sumExpenses
         let numberFormatter = NumberFormatter()
@@ -253,7 +253,7 @@ struct ListInvoiceView: View {
         let myCustomer = selectedCustomer?.title ?? ""
         
         if showFilteredCustomer {
-            let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)  &&  $0.customer?.title == myCustomer })
+            let filteredTransactions1 = sortedTransactions.filter({ ($0.amount >= filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)  &&  $0.customer?.title == myCustomer })
             
             let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
             
@@ -261,7 +261,7 @@ struct ListInvoiceView: View {
             
             return filteredTransactions
         } else {
-            let filteredTransactions1 = sortedTransactions.filter({ ($0.amount > filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)})
+            let filteredTransactions1 = sortedTransactions.filter({ ($0.amount >= filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)})
             
             let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
             

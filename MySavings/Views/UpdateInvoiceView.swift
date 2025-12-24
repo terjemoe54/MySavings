@@ -22,7 +22,8 @@ struct UpdateInvoiceView: View {
     @State private var isPaid: Bool = false
     @State private var selectedType: TransactionType = .expense
     @State private var selectedState: TransactionState = .pending
-    @State private var interval = 1
+    @State private var interval = 0
+    @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     
     var body: some View {
@@ -45,6 +46,10 @@ struct UpdateInvoiceView: View {
                         Text("Beløp:")
                         TextField("Beløp", value: $amount, formatter: numberFormatter)
                             .keyboardType(.decimalPad)
+                    } .onChange(of: amount) { oldValue, newValue in
+                        if newValue < filterMinimum {
+                            amount = filterMinimum
+                        }
                     }
                     
                     // Picker for Expense / Income
@@ -97,8 +102,8 @@ struct UpdateInvoiceView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .buttonStyle(.borderedProminent)
-                    .disabled(changed || amount < 1)
-                    //.disabled(title.isEmpty)
+                    .disabled(changed || amount < filterMinimum )
+                    
                 }
             }
             .preferredColorScheme(darkModeEnabled ? .dark : .light)
@@ -131,7 +136,11 @@ struct UpdateInvoiceView: View {
         if selectedType == .expense && selectedState == .resieved {
             selectedState = .paid
         }
-    
+        
+        if amount < filterMinimum {
+            amount = filterMinimum
+        }
+
         invoice.title = title
         invoice.type = selectedType
         invoice.state = selectedState
@@ -155,8 +164,3 @@ struct UpdateInvoiceView: View {
      && !invoice.customer!.hasChanges
    }
 }
-
-//#Preview {
-//    UpdateInvoiceView(invoice: Invoice())
-//        .modelContainer(for: Invoice.self)
-//}

@@ -21,7 +21,8 @@ struct CreateInvoiceView: View {
     @State private var selectedType: TransactionType = .expense
     @State private var selectedState: TransactionState = .pending
     @State private var isPaid: Bool = false
-    @State private var interval = 1
+    @State private var interval = 0
+    @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     
     var body: some View {
@@ -39,6 +40,12 @@ struct CreateInvoiceView: View {
                         TextField("Beløp", value: $amount, formatter: numberFormatter)
                             .keyboardType(.decimalPad)
                     }
+                    .onChange(of: amount) { oldValue, newValue in
+                        if newValue < filterMinimum {
+                            amount = filterMinimum
+                        }
+                    }
+                    
                     DatePicker("Forfallsdato:", selection: $dueDate, displayedComponents: .date)
                     DatePicker("Belalt Dato:", selection: $paidDate, displayedComponents: .date)
                     
@@ -93,7 +100,7 @@ struct CreateInvoiceView: View {
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)
-                    .disabled(title.isEmpty || amount < 1)
+                    .disabled(title.isEmpty || amount < filterMinimum)
                 }
             }
         }

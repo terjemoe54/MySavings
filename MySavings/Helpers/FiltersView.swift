@@ -45,6 +45,11 @@ struct FiltersView: View {
                         Text("Minimumsbeløp:")
                         TextField("Beløp :", value: $filterMinimum, formatter: NumberFormatter())
                     }
+                    .onChange(of: filterMinimum) { oldValue, newValue in
+                        if newValue < filterMinimum {
+                            filterMinimum = filterMinimum
+                        }
+                    }
                 }
                 
                 Section(header: Text("Intervall")
