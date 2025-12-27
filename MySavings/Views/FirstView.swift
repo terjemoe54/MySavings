@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct FirstView: View {
+    @EnvironmentObject var model: AppModel
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("orderDescending") var orderDescending = false
@@ -42,7 +43,7 @@ struct FirstView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                 //   Text(myCustomer)
+                 //   Text("Current Client: \(model.klientname)")
                     Text(showName ? name : "")
                         .font(.largeTitle)
                         .bold()
@@ -125,6 +126,7 @@ struct FirstView: View {
                    content: {
                 NavigationStack {
                     ListInvoiceView()
+                        .environmentObject(model)
                 }
             })
             .sheet(isPresented: $showingSettings) {

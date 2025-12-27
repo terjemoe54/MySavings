@@ -8,8 +8,8 @@
 import SwiftUI
 import SwiftData
 
-// BalanceView moved into a SwiftUI View type so property wrappers aren't at top-level
 struct BalanceView: View {
+    @EnvironmentObject var model: AppModel
     @Query var transactions: [Invoice]
     private let calendar = Calendar.current
     @AppStorage("filterMinimum") var filterMinimum = 1.0
@@ -17,9 +17,9 @@ struct BalanceView: View {
     @AppStorage("showExpenses") var showExpenses = true
     @AppStorage("orderDescending") var orderDescending = false
     @AppStorage("sortPaid") var sortPaid = false
+    @AppStorage("showFilteredCustomer") var showFilteredCustomer = false
     @AppStorage("fromDate") var fromDate = Date()
     @AppStorage("toDate") var toDate = Date()
-    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8)
@@ -72,22 +72,28 @@ struct BalanceView: View {
     }
     
     private var displayTransactions: [Invoice] {
-        let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) > calendar.startOfDay(for: $1.paidDate) }) : transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) < calendar.startOfDay(for: $1.paidDate) }) :  orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) > calendar.startOfDay(for: $1.dueDate) }) : transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) < calendar.startOfDay(for: $1.dueDate) })
-        guard filterMinimum > 0 else {
-            return sortedTransactions
+        let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) > calendar.startOfDay(for: $1.paidDate)}) : transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) < calendar.startOfDay(for: $1.paidDate)}) :  orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) > calendar.startOfDay(for: $1.dueDate)}) : transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) < calendar.startOfDay(for: $1.dueDate) })
+        
+        let myCustomer = model.klientname
+        
+        if showFilteredCustomer {
+            let filteredTransactions1 = sortedTransactions.filter({ ($0.amount >= filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)  &&  $0.customer?.title == myCustomer })
+            
+            let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
+            
+            let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
+            
+            return filteredTransactions
+        } else {
+            let filteredTransactions1 = sortedTransactions.filter({ ($0.amount >= filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)})
+            
+            let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
+            
+            let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
+            
+            return filteredTransactions
         }
-        
-        let filteredTransactions1 = sortedTransactions.filter({ ($0.amount >= filterMinimum) && (showExpenses ? $0.type == .expense : $0.type != .all) && (showUnpaid ? $0.state == .pending : $0.type != .all)})
-        
-        let filteredTransactions2 = sortedTransactions.filter({ sortPaid ? (calendar.startOfDay(for:$0.paidDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.paidDate) <= calendar.startOfDay(for: toDate)) : (calendar.startOfDay(for: $0.dueDate) >= calendar.startOfDay(for: fromDate)) && (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: toDate))})
-        
-        let filteredTransactions = filteredTransactions1.filter({ filteredTransactions2.contains($0) })
-        
-        return filteredTransactions
-        
     }
-    
-    
     
     private var expenses: String {
         let sumExpenses = displayTransactions
@@ -129,4 +135,3 @@ struct BalanceView: View {
 #Preview {
     BalanceView()
 }
-

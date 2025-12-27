@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ListInvoiceView: View {
+    @EnvironmentObject var model: AppModel
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("orderDescending") var orderDescending = false
@@ -29,13 +30,13 @@ struct ListInvoiceView: View {
     @State private var invoiceToEdit: Invoice?
     @State private var showConfirmation: Bool = false
     @State private var invoiceToDelete: Invoice?
-    @State private var showFilteredCustomer: Bool = false
+    @AppStorage("showFilteredCustomer") var showFilteredCustomer = false
     let calendar = Calendar.current
     @State private var selectedCustomer: Customer?
     @Query private var customers: [Customer]
     
     var body: some View {
-        
+       
         NavigationStack {
             Section {
                 Text("Sum : \(total)")
@@ -56,11 +57,18 @@ struct ListInvoiceView: View {
                     .pickerStyle(.inline)
                     Text("Klienter")
                         .tag(nil as Customer?)
-                }.disabled(!showFilteredCustomer)
+                }
+                .disabled(!showFilteredCustomer)
+                .onChange(of: selectedCustomer) { oldValue, newValue in
+                    if let title = newValue?.title {
+                        model.klientname = title
+                    }
+                }
             
             }.frame(width: 200,height: 20,  alignment: .center)
          
             ZStack {
+               
                 List {
                     ForEach(displayTransactions) { invoice in
                         HStack {
@@ -132,6 +140,7 @@ struct ListInvoiceView: View {
                 }
                
                 FloatingButton()
+            
             }
             .confirmationDialog(
                 "Slett",
@@ -245,11 +254,7 @@ struct ListInvoiceView: View {
     
     private var displayTransactions: [Invoice] {
         let sortedTransactions =  sortPaid ? orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) > calendar.startOfDay(for: $1.paidDate)}) : transactions.sorted(by: { calendar.startOfDay(for: $0.paidDate) < calendar.startOfDay(for: $1.paidDate)}) :  orderDescending ? transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) > calendar.startOfDay(for: $1.dueDate)}) : transactions.sorted(by: { calendar.startOfDay(for: $0.dueDate) < calendar.startOfDay(for: $1.dueDate) })
-        guard filterMinimum > 0 else {
-            return sortedTransactions
-        }
-    
- // Filtering
+        
         let myCustomer = selectedCustomer?.title ?? ""
         
         if showFilteredCustomer {
@@ -279,3 +284,4 @@ struct ListInvoiceView: View {
     ListInvoiceView()
         .modelContainer(for: Invoice.self, inMemory: true)
 }
+

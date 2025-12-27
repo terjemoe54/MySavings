@@ -10,6 +10,11 @@
 
 import Foundation
 import SwiftData
+import Combine
+
+class AppModel: ObservableObject {
+    @Published var klientname: String = "Guest"
+}
 
 @Model
 class Customer {

@@ -10,9 +10,11 @@ import SwiftData
 
 @main
 struct MySavingsApp: App {
+    @StateObject var model = AppModel()
     var body: some Scene {
         WindowGroup {
             FirstView()
+            .environmentObject(model)
             .modelContainer(for: Invoice.self)
      }
   }

@@ -19,9 +19,7 @@ struct CreateCustomerView: View {
     @State private var showConfirmation: Bool = false
     
     var body: some View {
-       
         NavigationView {
-            
             List {
                 Image(systemName: "person.3.fill")
                     .background(.white)
@@ -106,7 +104,6 @@ struct CreateCustomerView: View {
             }
         }
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
-        
     }
 }
 

@@ -15,8 +15,7 @@ struct UpdateCustomerView: View {
     @Bindable var customer: Customer
     @State private var title = ""
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
-    
-    
+     
     var body: some View {
         List {
             Section("Klient") {
