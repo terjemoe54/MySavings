@@ -28,7 +28,7 @@ struct CreateInvoiceView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Faktura For:"){
+                Section("Bilag For:"){
                     TextField("Navn", text: $title)
                         .autocorrectionDisabled(true)
                         .textInputAutocapitalization(.sentences)
@@ -75,7 +75,7 @@ struct CreateInvoiceView: View {
                 }
                 
                 Section {
-                    Picker("Velg en Kunde", selection: $selectedCustomer){
+                    Picker("Velg en Klient", selection: $selectedCustomer){
                         ForEach(customers.sorted { $0.title < $1.title }) { customer in
                             Text(customer.title)
                                 .tag(customer as Customer?)
@@ -87,13 +87,8 @@ struct CreateInvoiceView: View {
                     }
                 }
             }
-            .navigationTitle("Opprett Faktura")
+            .navigationTitle("Opprett Bilag")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction){
-                    Button("Avslutt"){
-                        dismiss()
-                    }
-                }
                 ToolbarItem(placement: .topBarTrailing){
                     Button("Opprett"){
                         save()

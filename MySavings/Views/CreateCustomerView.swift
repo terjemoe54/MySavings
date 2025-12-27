@@ -28,12 +28,12 @@ struct CreateCustomerView: View {
                     .foregroundStyle(.blue)
                     .font(Font.largeTitle.bold())
                     .clipShape(.capsule)
-                Section("Kunde: ") {
-                    TextField("Kunde Navn", text: $title)
+                Section("Klient: ") {
+                    TextField("Klient Navn", text: $title)
                         .autocorrectionDisabled(true)
                         .textInputAutocapitalization(.sentences)
                     
-                    Button("Opprett Kunde") {
+                    Button("Opprett Klient") {
                         withAnimation{
                             let customer = Customer(title: title)
                             modelContext.insert(customer)
@@ -45,7 +45,7 @@ struct CreateCustomerView: View {
                     .disabled(title.isEmpty)
                 }
                
-                Section("Kunder") {
+                Section("Klienter") {
                     ForEach(customers) { customer in
                 Text(customer.title)
                             .swipeActions {
@@ -85,7 +85,7 @@ struct CreateCustomerView: View {
                         })
                 }
             }
-            .navigationTitle("Opprett Kunde")
+            .navigationTitle("Opprett Klient")
             .sheet(item: $customerToEdit,
                    onDismiss: {
                 customerToEdit = nil

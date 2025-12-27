@@ -47,14 +47,14 @@ struct ListInvoiceView: View {
                 Toggle(isOn: $showFilteredCustomer) {
                     Text("Filter")
                 }
-                Picker("Velg en Kunde", selection: $selectedCustomer){
+                Picker("Velg en Klient", selection: $selectedCustomer){
                     ForEach(customers.sorted { $0.title < $1.title }) { customer in
                         Text(customer.title)
                             .tag(customer as Customer?)
                     }
                     .labelsHidden()
                     .pickerStyle(.inline)
-                    Text("Kunder")
+                    Text("Klienter")
                         .tag(nil as Customer?)
                 }.disabled(!showFilteredCustomer)
             
@@ -180,7 +180,7 @@ struct ListInvoiceView: View {
             })
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Avbryt \(Image(systemName: "arrowshape.turn.up.backward.2.fill"))") {
+                    Button("Tilbake \(Image(systemName: "arrowshape.turn.up.backward.2.fill"))") {
                         dismiss()
                     }
                     .buttonStyle(.borderedProminent)

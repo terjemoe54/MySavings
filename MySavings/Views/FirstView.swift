@@ -42,6 +42,7 @@ struct FirstView: View {
                     .ignoresSafeArea()
                 
                 VStack {
+                 //   Text(myCustomer)
                     Text(showName ? name : "")
                         .font(.largeTitle)
                         .bold()
@@ -61,7 +62,7 @@ struct FirstView: View {
                                     .foregroundColor(.white)
                             }
                             .buttonStyle(.borderedProminent)
-                            Text("Kunder")
+                            Text("Klienter")
                                 .font(.system(size: 25, weight: .black))
                                 .foregroundColor(.white)
                                 .opacity(0.8)
@@ -76,7 +77,7 @@ struct FirstView: View {
                                     .foregroundColor(.white)
                             }
                             .buttonStyle(.borderedProminent)
-                            Text("Fakturaer")
+                            Text("Bilag")
                                 .font(.system(size: 25, weight: .black))
                                 .foregroundColor(.white)
                                 .opacity(0.8)

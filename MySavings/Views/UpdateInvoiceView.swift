@@ -30,7 +30,7 @@ struct UpdateInvoiceView: View {
         
         NavigationStack {
             List {
-                Section("Faktura For") {
+                Section("Bilag For") {
                     TextField("Navn", text: $title)
                         .autocorrectionDisabled(true)
                         .textInputAutocapitalization(.sentences)
@@ -76,7 +76,7 @@ struct UpdateInvoiceView: View {
                             .keyboardType(.decimalPad)
                     }
                     
-                    Picker("Velg en Kunde", selection: $invoice.customer){
+                    Picker("Velg en Klient", selection: $invoice.customer){
                         ForEach(customers) { customer in
                             Text(customer.title)
                                 .tag(customer as Customer?)
@@ -122,7 +122,7 @@ struct UpdateInvoiceView: View {
                 self.isPaid = invoice.isPaid
                 self.interval = invoice.interval
             }
-            .navigationTitle("Oppdater Faktura")
+            .navigationTitle("Oppdater Bilag")
         }
         
     }
