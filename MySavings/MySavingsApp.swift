@@ -1,7 +1,7 @@
 //
 //  MySavingsApp.swift
 //  MySavings
-//  New GitIgnor 
+//  New GitIgnor nå
 //  Created by Terje Moe on 08/12/2025.
 //
 
