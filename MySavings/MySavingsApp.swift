@@ -3,7 +3,8 @@
 //  MySavings
 //  New GitIgnor nå
 //  Created by Terje Moe on 08/12/2025.
-//
+//  Denne bruker iCloude
+//  Oppdatert med ny Github 01.01.2026
 
 import SwiftUI
 import SwiftData
