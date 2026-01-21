@@ -338,6 +338,7 @@ struct ListInvoiceView: View {
             copy.isPaid = false
             copy.interval = original.interval
             copy.customer = original.customer
+            copy.progress = 0
             modelContext.insert(copy)
             copy.customer?.invoices?.append(copy)
             original.isPaid = ((original.state == .paid) || (original.state == .resieved) || (original.state == .taken))  ? true : false

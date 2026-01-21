@@ -40,6 +40,7 @@ class Invoice {
     var isPaid: Bool = false
     var interval: Int = 0
     var customer: Customer?
+    var progress: Int = 0
     
     init(
         title: String = "",
@@ -49,7 +50,8 @@ class Invoice {
         paidDate: Date = .now,
         amount: Double = 0.0,
         isPaid: Bool = false,
-        interval: Int = 0
+        interval: Int = 0,
+        progress: Int = 0
     ) {
         self.title = title
         self.type = type
@@ -59,6 +61,7 @@ class Invoice {
         self.amount = amount
         self.isPaid = isPaid
         self.interval = interval
+        self.progress = progress
     }
     
     @Transient
