@@ -317,8 +317,7 @@ struct ListInvoiceView: View {
         let sortedTransactions = transactions.sorted { calendar.startOfDay(for: $0.paidDate) > calendar.startOfDay(for: $1.paidDate) }
         // Filter to only those with dueDate after today
         let filtered = sortedTransactions.filter { (calendar.startOfDay(for: $0.dueDate) <= calendar.startOfDay(for: Date()) && ($0.interval > 0 && $0.isPaid == false ))}
-     //   let filtered = sortedTransactions.filter { ($0.interval > 0 && $0.isPaid == false )}
- 
+   
         return filtered
     }
     
