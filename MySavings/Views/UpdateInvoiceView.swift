@@ -23,6 +23,7 @@ struct UpdateInvoiceView: View {
     @State private var selectedType: TransactionType = .expense
     @State private var selectedState: TransactionState = .pending
     @State private var interval = 0
+    @State private var progress = 0
     @AppStorage("filterMinimum") var filterMinimum = 1.0
     @AppStorage("darkModeEnambled") private var darkModeEnabled = false
     @AppStorage("ShowStatus") private var showStatus = false
@@ -76,7 +77,11 @@ struct UpdateInvoiceView: View {
                     
                     if showStatus{
                         Toggle("Generer ny fra denne (Status = 0", isOn: $isPaid)
-                    }
+                        HStack {
+                            Text("Progress:")
+                            TextField("Progress", value: $progress, formatter: intFormatter)
+                        }
+                        }
                     
                     Picker("Velg en Klient", selection: $selectedCustomer){
                         ForEach(customers) { customer in

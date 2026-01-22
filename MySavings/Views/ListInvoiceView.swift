@@ -16,7 +16,6 @@ struct ListInvoiceView: View {
     @AppStorage("showUnpaid") var showUnpaid = false
     @AppStorage("showDueUnpaid") var showDueUnpaid = false
     @AppStorage("showAllPosts") var showAllPosts = false
-    @AppStorage("showExpenses") var showExpenses = false
     @AppStorage("fromDate") var fromDate = Date()
     @AppStorage("toDate") var toDate = Date()
     @AppStorage("sortPaid") var sortPaid = false
@@ -40,7 +39,6 @@ struct ListInvoiceView: View {
     var body: some View {
         NavigationStack {
             Section {
-             //   Text(showAllPosts == true && showFilteredCustomer == false ? "Ok" : "NoGood")
                 Text("Sum : \(total)")
                     .font(.system(size: 16,weight: .black))
                     .background(.blue)
@@ -70,7 +68,7 @@ struct ListInvoiceView: View {
             }.frame(width: 200,height: 20,  alignment: .center)
             ZStack {
                 List {
-                   ForEach(showAllPosts == true && showFilteredCustomer == false ? invoices : displayTransactions) { invoice in
+                   ForEach(showAllPosts == true && showFilteredCustomer == false ? showAllTransactions : displayTransactions) { invoice in
                         HStack {
                             VStack(alignment: .leading) {
                                 HStack {
@@ -214,11 +212,11 @@ struct ListInvoiceView: View {
                 }
             }
             .sheet(isPresented: $showFilters) {
-                FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending,showUnpaid: $showUnpaid,showDueUnpaid: $showDueUnpaid, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid,showAllPosts: $showAllPosts)
+                FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending,showUnpaid: $showUnpaid,showDueUnpaid: $showDueUnpaid, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid,showAllPosts: $showAllPosts)
             }
         }
-        .onDisappear {
-         //   showFilteredCustomer = false
+        .onDisappear{
+           showFilteredCustomer = false
         }
         .onAppear() {
           duplicateAllInvoices()
@@ -271,10 +269,8 @@ struct ListInvoiceView: View {
         
         func matchesBasicFilters(_ invoice: Invoice) -> Bool {
             guard invoice.amount >= filterMinimum else { return false }
-            if showExpenses && invoice.type != .expense { return false }
-            if !showExpenses && invoice.type != .income { return false } // denne er lakt til
-            if showUnpaid && invoice.state != .pending { return false }
-            if !showUnpaid && invoice.isPaid == false { return false }
+            if showUnpaid && invoice.state != .pending && !showFilteredCustomer { return false }
+            if !showUnpaid && invoice.isPaid == false && !showFilteredCustomer { return false }
            
             return true
         }
@@ -311,6 +307,42 @@ struct ListInvoiceView: View {
         
     }
     
+    //********
+    
+    
+    private var showAllTransactions: [Invoice] {
+        // This selects all post sorted on duedate and filtered by from - to date
+        let sortedTransactions: [Invoice] = {
+            let sortKey: KeyPath<Invoice, Date> = sortPaid ? \.paidDate : \.dueDate
+            return transactions.sorted {
+                let lhs = calendar.startOfDay(for: $0[keyPath: sortKey])
+                let rhs = calendar.startOfDay(for: $1[keyPath: sortKey])
+                return orderDescending ? lhs > rhs : lhs < rhs
+            }
+        }()
+        
+        let myCustomer = selectedCustomer?.title ?? ""
+        
+        func matchesDateRange(_ invoice: Invoice) -> Bool {
+            let date = sortPaid ? invoice.paidDate : invoice.dueDate
+            let start = calendar.startOfDay(for: fromDate)
+            let end = calendar.startOfDay(for: toDate)
+            let invoiceDay = calendar.startOfDay(for: date)
+            return invoiceDay >= start && invoiceDay <= end
+        }
+        
+        let filtered = sortedTransactions.filter { invoice in
+            matchesDateRange(invoice)
+        }
+        
+        return filtered
+    }
+    
+    
+    //********
+    
+    
+    
     
     private var selectTransactions: [Invoice] {
         // Sort by most recent paidDate first
@@ -326,6 +358,10 @@ struct ListInvoiceView: View {
         guard !source.isEmpty else { return }
         
         for original in source {
+            if !original.isPaid && original.state != .pending { original.isPaid = true
+                try? modelContext.save()
+            }
+        guard original.progress < 1 else { return }
             let copy = Invoice()
             copy.title = "Copy of \(original.title)"
             copy.type = original.type
@@ -338,7 +374,7 @@ struct ListInvoiceView: View {
             copy.isPaid = false
             copy.interval = original.interval
             copy.customer = original.customer
-            copy.progress = 0
+            original.progress = original.progress + 1
             modelContext.insert(copy)
             copy.customer?.invoices?.append(copy)
             original.isPaid = ((original.state == .paid) || (original.state == .resieved) || (original.state == .taken))  ? true : false

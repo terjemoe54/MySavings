@@ -16,7 +16,6 @@ struct FirstView: View {
     @AppStorage("showUnpaid") var showUnpaid = true
     @AppStorage("showDueUnpaid") var showDueUnpaid = true
     @AppStorage("showAllPosts") var showAllPosts = false
-    @AppStorage("showExpenses") var showExpenses = true
     @AppStorage("fromDate") var fromDate = Date()
     @AppStorage("toDate") var toDate = Date()
     @AppStorage("sortPaid") var sortPaid = false
@@ -124,7 +123,7 @@ struct FirstView: View {
                 }
             }
             .sheet(isPresented: $showFilters) {
-                FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending,showUnpaid: $showUnpaid, showDueUnpaid: $showDueUnpaid, showExpenses: $showExpenses, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid, showAllPosts: $showAllPosts)
+                FiltersView(filterMinimum: $filterMinimum, orderDescending: $orderDescending,showUnpaid: $showUnpaid, showDueUnpaid: $showDueUnpaid, fromDate: $fromDate, toDate: $toDate, sortPaid: $sortPaid, showAllPosts: $showAllPosts)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -157,7 +156,6 @@ struct FirstView: View {
         .onAppear {
             showDueUnpaid = true
             showUnpaid = true
-            showExpenses = true
             showAllPosts = true
             showAllPosts = false
         }

@@ -16,7 +16,6 @@ struct BalanceView: View {
     @AppStorage("showUnpaid") var showUnpaid = false
     @AppStorage("showDueUnpaid") var showDueUnpaid = false
     @AppStorage("showAllPosts") var showAllPosts = true
-    @AppStorage("showExpenses") var showExpenses = false
     @AppStorage("orderDescending") var orderDescending = false
     @AppStorage("sortPaid") var sortPaid = false
     @AppStorage("showFilteredCustomer") var showFilteredCustomer = false
@@ -61,7 +60,7 @@ struct BalanceView: View {
                         Text("Poster")
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(Color.black)
-                        Text(showAllPosts == true && showFilteredCustomer == false ? "\(invoices.count)" : "\(displayTransactions.count)")
+                        Text(showAllPosts == true && showFilteredCustomer == false ? "\(showAllTransactions.count)" : "\(displayTransactions.count)")
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(Color.black)
                     }
@@ -73,6 +72,42 @@ struct BalanceView: View {
         .frame(height: 150)
         .padding(.horizontal,7)
     }
+   
+    
+    //***
+    
+    private var showAllTransactions: [Invoice] {
+        // This selects all post sorted on duedate and filtered by from - to date
+        let sortedTransactions: [Invoice] = {
+            let sortKey: KeyPath<Invoice, Date> = sortPaid ? \.paidDate : \.dueDate
+            return transactions.sorted {
+                let lhs = calendar.startOfDay(for: $0[keyPath: sortKey])
+                let rhs = calendar.startOfDay(for: $1[keyPath: sortKey])
+                return orderDescending ? lhs > rhs : lhs < rhs
+            }
+        }()
+        
+        let myCustomer = model.klientname
+        
+        func matchesDateRange(_ invoice: Invoice) -> Bool {
+            let date = sortPaid ? invoice.paidDate : invoice.dueDate
+            let start = calendar.startOfDay(for: fromDate)
+            let end = calendar.startOfDay(for: toDate)
+            let invoiceDay = calendar.startOfDay(for: date)
+            return invoiceDay >= start && invoiceDay <= end
+        }
+        
+        let filtered = sortedTransactions.filter { invoice in
+            matchesDateRange(invoice)
+        }
+        
+        return filtered
+    }
+    
+    
+    //***
+    
+  
     
     private var displayTransactions: [Invoice] {
         let sortedTransactions: [Invoice] = {
@@ -88,10 +123,9 @@ struct BalanceView: View {
         
         func matchesBasicFilters(_ invoice: Invoice) -> Bool {
             guard invoice.amount >= filterMinimum else { return false }
-            if showExpenses && invoice.type != .expense { return false }
-            if !showExpenses && invoice.type != .income { return false } // denne er lakt til
-            if showUnpaid && invoice.state != .pending { return false }
-            if !showUnpaid && invoice.isPaid == false { return false }
+          
+            if showUnpaid && invoice.state != .pending && !showFilteredCustomer { return false }
+            if !showUnpaid && invoice.isPaid == false && !showFilteredCustomer { return false }
            
             return true
         }
@@ -128,7 +162,7 @@ struct BalanceView: View {
     }
     
    private var expenses: String {
-        let sumExpenses = (showAllPosts == true && showFilteredCustomer == false ? invoices : displayTransactions)
+        let sumExpenses = (showAllPosts == true && showFilteredCustomer == false ? showAllTransactions : displayTransactions)
             .filter { $0.type == .expense && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let numberFormatter = NumberFormatter()
@@ -139,7 +173,7 @@ struct BalanceView: View {
     }
     
     private var income: String {
-        let sumIncome = (showAllPosts == true && showFilteredCustomer == false ? invoices : displayTransactions)
+        let sumIncome = (showAllPosts == true && showFilteredCustomer == false ? showAllTransactions : displayTransactions)
             .filter { $0.type == .income && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let numberFormatter = NumberFormatter()
@@ -150,10 +184,10 @@ struct BalanceView: View {
     }
     
     private var total: String {
-        let sumExpenses = (showAllPosts == true && showFilteredCustomer == false ? invoices : displayTransactions)
+        let sumExpenses = (showAllPosts == true && showFilteredCustomer == false ? showAllTransactions : displayTransactions)
             .filter { $0.type == .expense && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
-        let sumIncome = (showAllPosts == true && showFilteredCustomer == false ? invoices : displayTransactions)
+        let sumIncome = (showAllPosts == true && showFilteredCustomer == false ? showAllTransactions : displayTransactions)
             .filter { $0.type == .income && $0.amount >= filterMinimum }
             .reduce(0, { $0 + $1.amount })
         let total = sumIncome - sumExpenses

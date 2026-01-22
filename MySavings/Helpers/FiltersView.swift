@@ -15,7 +15,6 @@ struct FiltersView: View {
     @Binding var orderDescending: Bool
     @Binding var showUnpaid: Bool
     @Binding var showDueUnpaid: Bool
-    @Binding var showExpenses: Bool
     @Binding var fromDate: Date
     @Binding var toDate: Date
     @Binding var sortPaid: Bool
@@ -45,11 +44,6 @@ struct FiltersView: View {
                             }
                         }
                         .padding(.vertical)
-                        
-                        Toggle(isOn: $showExpenses) {
-                            Text(showExpenses ? "Viser Bare Utgifter" : "Viser Bare Intekter")
-                        }
-                     //   .disabled(showAllPosts)
                         
                         Toggle(isOn: $showAllPosts) {
                             Text("Vis Alle Poster")
@@ -113,7 +107,7 @@ struct FiltersView: View {
 }
 
 #Preview {
-    FiltersView(filterMinimum: .constant(1.0), orderDescending: .constant(false),showUnpaid: .constant(false), showDueUnpaid: .constant(false), showExpenses: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false), showAllPosts: .constant(false))
+    FiltersView(filterMinimum: .constant(1.0), orderDescending: .constant(false),showUnpaid: .constant(false), showDueUnpaid: .constant(false), fromDate: .constant(Date()), toDate: .constant(Date()), sortPaid: .constant(false), showAllPosts: .constant(false))
 }
 
 
