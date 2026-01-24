@@ -45,9 +45,9 @@ struct MonthlyInvoiceSummaryView: View {
                         }
                         
                         HStack(spacing: 16) {
-                            statCard(title: "Total", amount: Double(Int(stats.totalAmount)), color: .blue)
-                            statCard(title: "Tilgode", amount: Double(Int(stats.paidAmount)), color: .green)
-                            statCard(title: "Venter", amount: Double(Int(stats.unpaidAmount)), color: .orange)
+                            statCard(title: "Tilgode", amount: Double(Int(stats.totalAmount)), color: .blue)
+                            statCard(title: "Betalt", amount: Double(Int(stats.paidAmount)), color: .green)
+                            statCard(title: "Intekt", amount: Double(Int(stats.unpaidAmount)), color: .orange)
                         }
                         
                         HStack {
