@@ -114,7 +114,9 @@ extension Array where Element == Invoice {
 
             let totalAmount = invoices.reduce(0) { $0 + signedAmount(for: $1) }
 
+          //  let paidInvoices = invoices.filter { $0.isPaid }
             let paidInvoices = invoices.filter { $0.isPaid }
+          
             let paidAmount = paidInvoices.reduce(0) { $0 + signedAmount(for: $1) }
 
             let pendingCount = invoices.filter { $0.state == .pending }.count

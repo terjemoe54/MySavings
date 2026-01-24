@@ -85,6 +85,6 @@ struct MonthlyInvoiceSummaryView: View {
 }
 
 #Preview {
-    // MonthlyInvoiceSummaryView()
+     MonthlyInvoiceSummaryView()
 }
 
