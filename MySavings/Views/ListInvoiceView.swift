@@ -219,7 +219,7 @@ struct ListInvoiceView: View {
            showFilteredCustomer = false
         }
         .onAppear() {
-          duplicateAllInvoices()
+        duplicateAllInvoices()
         }
         .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }
@@ -267,11 +267,21 @@ struct ListInvoiceView: View {
         
         let myCustomer = selectedCustomer?.title ?? ""
         
+        
         func matchesBasicFilters(_ invoice: Invoice) -> Bool {
+            // Minimum amount must pass
             guard invoice.amount >= filterMinimum else { return false }
+
+            // Always include one-time payments (interval == 0)
+            if invoice.interval == 0 { return showUnpaid ? false : true }
+
+            // Always include paid invoices regardless of the "Show Unpaid" toggle
+            if invoice.isPaid { return showUnpaid ? false : true }
+
+            // For unpaid recurring invoices, apply the existing toggles
             if showUnpaid && invoice.state != .pending && !showFilteredCustomer { return false }
             if !showUnpaid && invoice.isPaid == false && !showFilteredCustomer { return false }
-           
+
             return true
         }
         

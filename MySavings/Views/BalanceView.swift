@@ -121,14 +121,27 @@ struct BalanceView: View {
         
         let myCustomer = model.klientname
         
+//        func matchesBasicFilters(_ invoice: Invoice) -> Bool {
+//            guard invoice.amount >= filterMinimum else { return false }
+//          
+//            if showUnpaid && invoice.state != .pending && !showFilteredCustomer { return false }
+//            if !showUnpaid && invoice.isPaid == false && !showFilteredCustomer { return false }
+//           
+//            return true
+//        }
+        
         func matchesBasicFilters(_ invoice: Invoice) -> Bool {
             guard invoice.amount >= filterMinimum else { return false }
-          
+            if invoice.interval == 0 { return showUnpaid ? false : true }
+            if invoice.isPaid { return showUnpaid ? false : true }
+
             if showUnpaid && invoice.state != .pending && !showFilteredCustomer { return false }
             if !showUnpaid && invoice.isPaid == false && !showFilteredCustomer { return false }
-           
+
             return true
         }
+        
+        
         
         func matchesDateRange(_ invoice: Invoice) -> Bool {
             let date = sortPaid ? invoice.paidDate : invoice.dueDate
